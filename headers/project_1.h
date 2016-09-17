@@ -7,3 +7,27 @@
 *               Dylan Way
 *       
 ****************************************************************************/
+#ifndef _PROJECT_1_H
+#define _PROJECT_1_H
+
+/* Defines section
+ * Add all #defines here
+ ***************************************************************************/
+
+
+/* Function prototype Section
+ * Add protoypes for all functions called by this module, with the exception
+ * of runtime routines.
+ ***************************************************************************/
+// Create unsigned array of 32 bytes
+// Create three pointers to three various points in this array
+// Initialize memroy at tow of the pointers
+// Use memmove to move8 bytes from aptr_1 to aptr_3
+// Use memmove to t move 16 bytes from apter_2 to aptr1
+// Use reverse on aptr_1 to reverse the entire 32 bytes
+// Use printf to print out the entire 32 byte array 
+// printf statements should use the pragma to disable during 
+// FRDM board related compilation 
+void project_1_report();
+
+#endif
