@@ -13,7 +13,7 @@
 /* Defines section
  * Add all #defines here
  ***************************************************************************/
-
+#define ARRAY_LENGTH 32
 
 /* Function prototype Section
  * Add protoypes for all functions called by this module, with the exception
@@ -21,7 +21,7 @@
  ***************************************************************************/
 // Create unsigned array of 32 bytes
 // Create three pointers to three various points in this array
-// Initialize memroy at tow of the pointers
+// Initialize memroy at two of the pointers
 // Use memmove to move8 bytes from aptr_1 to aptr_3
 // Use memmove to t move 16 bytes from apter_2 to aptr1
 // Use reverse on aptr_1 to reverse the entire 32 bytes

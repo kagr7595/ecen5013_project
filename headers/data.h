@@ -13,7 +13,7 @@
 /* Defines section
  * Add all #defines here
  ***************************************************************************/
-
+#define POWER_2_64 512
 
 /* Function prototype Section
  * Add protoypes for all functions called by this module, with the exception
