@@ -67,8 +67,8 @@ void dump_memory(uint8_t * start, uint32_t length)
         for (j = 0;j<num_divides; j++)
         {
             printf("%x",*(rem_array+num_divides-j));
-        {
-            
+        }
+                
     }
 
 }

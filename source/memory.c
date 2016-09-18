@@ -99,7 +99,7 @@ int8_t my_reverse(uint8_t * src, uint32_t length)
         if (return_code != 0 ) {return 3;} 
         
         // reverse all the bytes in the src pointer
-        for (i = 0; i <= length/2; i++)
+        for (i = 0; i < length/2; i++)
         {
             temp = *(src+i);
             *(src+i) = *(src+(length-1-i));

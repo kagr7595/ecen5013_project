@@ -10,6 +10,11 @@
 #ifndef _PROJECT_1_H
 #define _PROJECT_1_H
 
+#include "stdio.h"
+#include "stdint.h"
+#include "memory.c"
+#include "data.c"
+
 /* Defines section
  * Add all #defines here
  ***************************************************************************/

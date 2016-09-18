@@ -10,6 +10,9 @@
 #ifndef _DATA_H
 #define _DATA_H
 
+#include "stdio.h"
+#include "stdint.h"
+
 /* Defines section
  * Add all #defines here
  ***************************************************************************/

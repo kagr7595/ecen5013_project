@@ -10,6 +10,9 @@
 #ifndef _MEMORY_H
 #define _MEMORY_H
 
+#include "stdio.h"
+#include "stdint.h"
+
 /* Defines section
  * Add all #defines here
  ***************************************************************************/
