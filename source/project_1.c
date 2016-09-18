@@ -156,7 +156,7 @@ void project_1_report()
     printf("Modified array=\n");
     for (i = 0; i < ARRAY_LENGTH; i++)
     {
-        printf(" array[%2d]: %d\n",i,*(array+i));
+        printf(" array[%02d]: %d\n",i,*(array+i));
         if (((i+1)%4)==0) {printf("\n");}
     }
 
@@ -166,5 +166,7 @@ void project_1_report()
         printf("%d Errors Occurred\n",final_return);
     }
 #endif
+
+    dump_memory(aptr_1, ARRAY_LENGTH);
    
 }
