@@ -48,7 +48,6 @@ else
 endif
 endif
 
-project: build
 
 .PHONY: %.o
 # Individually compiles any single object file
@@ -74,6 +73,7 @@ compile-all: $(SRCS) $(HDRS)
 # Compiles all object files and links
 build:  $(OBJS) depend
 	$(CC) $(LDFLAGS) -o project main.o
+	size project
 
 .PHONY: upload
 # Takes an executable and copies it over to a release directory on the beagle bone
@@ -83,7 +83,7 @@ upload:
 .PHONY: clean
 # Removes all compiled object, preprocessed output, assembly output, executables, and build output files
 clean:
-	rm -f project *.o *.s *.i *.map *.out *.dep
+	rm -f project *.o *.s *.i *.map *.out *.dep *.objdump
 
 .PHONY: build-lib
 # Generates a library of your memory.c and data.c into an archive called libproject1.a
@@ -92,5 +92,10 @@ build-lib: memory.c data.c
 
 .PHONY: depend
 # Generates a dependencies file for the build
-depend: $(SRCS) $(SRCS)
+depend: $(SRCS) $(HDRS)
 	gcc -M $(CFLAGS) $^ > file_dependencies.dep
+
+.PHONY: %.objdump
+# Runs objdump -S on the specified file and outputs to a file %.objdump
+%.objdump: %.o
+	objdump -S $< > $@
