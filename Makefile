@@ -1,4 +1,5 @@
-############################################################################
+#
+##########################################################################
 #
 #  	Filename: Makefile
 #	Description: A makefile which supports three compilers:
@@ -31,19 +32,18 @@ VPATH = $(INCSRC) $(INCHDRS)
 
 ARCH ?= host
 LDFLAGS := -O0 -Wl,-Map=project.map
+CFLAGS := -DPROJECT_1 -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS)
 
 ifeq ( $ARCH, bbb )
     CC := arm-linux-gnueabihf-gcc
-    CFLAGS := -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS) 
 
 else 
 ifeq ( $ARCH, frdm )
     CC := arm-none-eabi-gcc
-    CFLAGS := -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS)
+    override CFLAGS := -DPROJECT_1 $(CFLAGS)
 
 else
     CC := gcc
-    CFLAGS := -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS)
 
 endif
 endif
@@ -52,7 +52,7 @@ endif
 .PHONY: build
 # Compiles all object files and links
 build: $(OBJS)
-	$(CC) $(LDFLAGS) -o project $(OBJS)
+	$(CC) $(LDFLAGS) -o project main.o
  
 .PHONY: %.o
 # Individually compiles any single object file
@@ -62,17 +62,17 @@ build: $(OBJS)
 .PHONY: %.s
 # Generates the assembly output of all files or a single file
 %.s: %.c
-	$(CC) -S -o $< $@
+	$(CC) -S $(CFLAGS) $<
 
 .PHONY: %.i
 # Generates the preprocessed output of all files or a single file
 %.i: %.c
-	$(CC) -E -o $< $@
+	$(CC) -E $(CFLAGS) $< > $@ 
 
 .PHONY: compile-all
 # Compiles the object files
 compile-all: $(SRCS) $(HDRS)
-	$(CC) -c $(CFLAGS) $(SRCS)
+	$(CC) -c $(CFLAGS) $^
 
 .PHONY: upload
 # Takes an executable and copies it over to a release directory on the beagle bone
