@@ -1,7 +1,7 @@
 /***************************************************************************
 *
 *  	Filename: memory.c
-*	Description: Basic memor movement options
+*	Description: Basic memory movement options
 *                    
 *       Author: Kathy Grimes 
 *               Dylan Way

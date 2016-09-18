@@ -8,6 +8,9 @@
 *       
 ****************************************************************************/
 #include "project_1.c"
+#ifdef FRDM
+#pragma GCC poison printf
+#endif
 
 int main()
 {

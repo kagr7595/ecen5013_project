@@ -54,6 +54,7 @@ void project_1_report()
     // aptr_3: Initialize the contents of this pointer to the end of 
     // the array to zeros using memzero function
     return_code = my_memzero(aptr_3, 16);
+#ifdef FRDM
     if(return_code != 0)
     {
         // print out statement of what error occurred 
@@ -73,10 +74,11 @@ void project_1_report()
         return_code = 0;
         final_return++;
     }
-    
+#endif
     
     /* Use memmove to move 8 bytes from aptr_1 to aptr_3 */
     return_code = my_memmove(aptr_1, aptr_3, 8);
+#ifdef FRDM
     if(return_code != 0)
     {
         // print out statement of what error occurred 
@@ -98,10 +100,11 @@ void project_1_report()
         return_code = 0;
         final_return++;
     }
-    
+#endif  
     
     /* Use memmove to move 16 bytes from aptr_2 to aptr_1 */
     return_code = my_memmove(aptr_2, aptr_1, 16);
+#ifdef FRDM
     if(return_code != 0)
     {
         // print out statement of what error occurred 
@@ -123,10 +126,11 @@ void project_1_report()
         return_code = 0;
         final_return++;
     }
-    
+#endif
     
     /* Use reverse on aptr_1 to reverse the entire 32 bytes */
-    return_code = my_reverse(aptr_1, 32);
+    return_code = my_reverse(aptr_1, ARRAY_LENGTH);
+#ifdef FRDM
     if(return_code != 0)
     {
         // print out statement of what error occurred 
@@ -143,15 +147,24 @@ void project_1_report()
         default: printf("ERROR: Something unexpected occurred in my_reverse\n");
             break;
         }
-
+        
         // reset return_code to 0 and increment final_return
         return_code = 0;
         final_return++;
     }
     
+    printf("Modified array=\n");
+    for (i = 0; i < ARRAY_LENGTH; i++)
+    {
+        printf(" array[%2d]: %d\n",i,*(array+i));
+        if (((i+1)%4)==0) {printf("\n");}
+    }
+
     if (final_return != 0)
     {
         // print out statement about how many errors occurred
         printf("%d Errors Occurred\n",final_return);
     }
+#endif
+   
 }
