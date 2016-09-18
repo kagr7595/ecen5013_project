@@ -40,7 +40,7 @@ ifeq ( $ARCH, bbb )
 else 
 ifeq ( $ARCH, frdm )
     CC := arm-none-eabi-gcc
-    override CFLAGS := -DPROJECT_1 $(CFLAGS)
+    override CFLAGS := -DFRDM $(CFLAGS)
 
 else
     CC := gcc

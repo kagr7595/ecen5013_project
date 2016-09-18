@@ -54,7 +54,7 @@ void project_1_report()
     // aptr_3: Initialize the contents of this pointer to the end of 
     // the array to zeros using memzero function
     return_code = my_memzero(aptr_3, 16);
-#ifdef FRDM
+#ifndef FRDM
     if(return_code != 0)
     {
         // print out statement of what error occurred 
@@ -78,7 +78,7 @@ void project_1_report()
     
     /* Use memmove to move 8 bytes from aptr_1 to aptr_3 */
     return_code = my_memmove(aptr_1, aptr_3, 8);
-#ifdef FRDM
+#ifndef FRDM
     if(return_code != 0)
     {
         // print out statement of what error occurred 
@@ -104,7 +104,7 @@ void project_1_report()
     
     /* Use memmove to move 16 bytes from aptr_2 to aptr_1 */
     return_code = my_memmove(aptr_2, aptr_1, 16);
-#ifdef FRDM
+#ifndef FRDM
     if(return_code != 0)
     {
         // print out statement of what error occurred 
@@ -130,7 +130,7 @@ void project_1_report()
     
     /* Use reverse on aptr_1 to reverse the entire 32 bytes */
     return_code = my_reverse(aptr_1, ARRAY_LENGTH);
-#ifdef FRDM
+#ifndef FRDM
     if(return_code != 0)
     {
         // print out statement of what error occurred 
