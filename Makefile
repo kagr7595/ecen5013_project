@@ -27,21 +27,23 @@
 
 
 include sources.mk
+VPATH = $(INCSRC) $(INCHDRS)
+
 ARCH ?= host
-LDFLAGS := -Wl,-Map=project.map
+LDFLAGS := -O0 -Wl,-Map=project.map
 
 ifeq ( $ARCH, bbb )
     CC := arm-linux-gnueabihf-gcc
-    CFLAGS := -Wall -g -O0 -std=c99
+    CFLAGS := -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS) 
 
 else 
 ifeq ( $ARCH, frdm )
     CC := arm-none-eabi-gcc
-    CFLAGS := -Wall -g -O0 -std=c99
+    CFLAGS := -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS)
 
 else
     CC := gcc
-    CFLAGS := -Wall -g -O0 -std=c99
+    CFLAGS := -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS)
 
 endif
 endif
@@ -55,7 +57,7 @@ build: $(OBJS)
 .PHONY: %.o
 # Individually compiles any single object file
 %.o: %.c
-	$(CC) -c $(CFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $<
 
 .PHONY: %.s
 # Generates the assembly output of all files or a single file
@@ -80,7 +82,7 @@ upload:
 .PHONY: clean
 # Removes all compiled object, preprocessed output, assembly output, executables, and build output files
 clean:
-	rm project *.o *.s *.i *.map *.out
+	rm -f project *.o *.s *.i *.map *.out
 
 .PHONY: build-lib
 # Generates a library of your memory.c and data.c into an archive called libproject1.a

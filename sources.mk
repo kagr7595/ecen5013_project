@@ -18,10 +18,9 @@ OBJS := $(SRCS:.c = .o)
 
 HDRS := \
     project_1.h   \
-    memory.c   \
-    data.c
+    memory.h   \
+    data.h
 
-INCLUDES = \
-    ../source   \
-    ../headers
+INCHDRS := ./headers
 
+INCSRC := ./source
