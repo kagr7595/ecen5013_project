@@ -12,7 +12,59 @@
 // Need to handle signed data
 int8_t my_itoa(uint8_t * str, int32_t data, int32_t base)
 {
+    uint32_t temp; 
+    uint16_t i; 
+    uint16_t num_elements; 
+    uint8_t return_code = 0;
+    
+    
+    if(str == NULL) {return 1;}
+    else if(base > 16 || base < 2) {return 2;}    
 
+    // if data is a negative number
+    if(data < 0)
+    {
+        temp = ~data+1;
+    } else
+    {
+        temp = data;
+    }
+
+    //switch from numbers to ascii characters
+    for (num_elements = 0; temp != 0; num_elements++)
+    {
+        //assign remainder into the str pointer
+        if(temp%base < 10)
+        {
+            *(str + num_elements) = temp%base + '0';
+        } else
+        {
+            *(str + num_elements) = temp%base + ('a'-10);
+        }
+        temp = temp/base;
+    }
+
+    // if data is negative, change the largest bit (sign bit) in str to 1
+    if (data < 0)
+    {
+        *(str+num_elements) = '-';  
+        num_elements++;
+    }
+
+    //reverse array of remainders to get ascii string of data without sign
+    return_code = my_reverse(str, num_elements);
+    if(return_code != 0){return 3;}
+
+    *(str+num_elements) = '\0';  
+    num_elements++;
+
+    printf("Given data: %d, new base: %d\nASCII str:",data,base);
+    for (i = 0; i<num_elements; i++)
+    {
+        printf("%c",*(str+i));
+    }                                  
+    printf("\n");
+    
     return 0;
 }
 
@@ -49,11 +101,15 @@ uint32_t little_to_big(uint32_t data)
 void dump_memory(uint8_t * start, uint32_t length)
 {
     uint32_t i;
-
-    printf("Dump array:\n");
-    for (i = 0; i < length; i++) 
+    if(start == NULL) {printf("ERROR: src pointer is NULL in dump_array\n");}
+    else if (length <= 0) {printf("ERROR: length is less than or equal to 0 in dump_array\n");}
+    else
     {
-        printf(" array[%d]:0x%x%x\n",i,*(start+i)>>4,(*(start+i)&0x0f));
-        if (((i+1)%4)==0) {printf("\n");}
+        printf("Dump array:\n");
+        for (i = 0; i < length; i++) 
+        {
+            printf(" array[%d]:0x%x%x\n",i,*(start+i)>>4,(*(start+i)&0x0f));
+            if (((i+1)%4)==0) {printf("\n");}
+        }
     }
 }

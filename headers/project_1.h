@@ -19,6 +19,11 @@
  * Add all #defines here
  ***************************************************************************/
 #define ARRAY_LENGTH 32
+#define MY_MEMMOVE 1
+#define MY_MEMZERO 2
+#define MY_REVERSE 3
+#define MY_ITOA    4
+#define MY_ATOI    5
 
 /* Function prototype Section
  * Add protoypes for all functions called by this module, with the exception
@@ -34,5 +39,8 @@
 // printf statements should use the pragma to disable during 
 // FRDM board related compilation 
 void project_1_report();
+
+// Prints out the error that occurred in each function 
+void return_code_error(int8_t return_code, uint8_t function_name);
 
 #endif
