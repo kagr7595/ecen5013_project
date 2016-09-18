@@ -166,5 +166,16 @@ void project_1_report()
         printf("%d Errors Occurred\n",final_return);
     }
 #endif
-   
+    
+    uint32_t endian_convert = 0x89ABCDEF;
+    uint32_t convert_big_to_little = big_to_little(endian_convert);
+    printf("Performing a big_to_little endian:\n");
+    printf("Original: %x\n", endian_convert);
+    printf("After big_to_little: %x\n\n", convert_big_to_little);
+
+    uint32_t convert_little_to_big = little_to_big(big_to_little);
+    printf("Converting back with little_to_big endian:\n");
+    printf("After little_to_big: %x\n", convert_little_to_big);
+
+
 }

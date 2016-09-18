@@ -28,16 +28,20 @@ int32_t my_atoi(uint32_t * str)
 // little endian
 uint32_t big_to_little(uint32_t data)
 {
-
-    return 0;
+    uint32_t data_out = 0x00000000;
+    data_out = ((data & 0x000000FF) << 24);
+    data_out |= ((data & 0x0000FF00) << 8);
+    data_out |= ((data & 0x00FF0000) >> 8);
+    data_out |= ((data & 0xFF000000) >> 24);
+    return data_out;
 }
 
 // Convert data types in memory from a little endian representation to 
 // big endian
 uint32_t little_to_big(uint32_t data)
 {
-
-    return 0;
+    uint32_t data_out = big_to_little(data);
+    return data_out;
 }
 
 // Takes pointer to memory and length of bytes to print 
