@@ -27,7 +27,7 @@ int8_t my_itoa(uint8_t * str, int32_t data, int32_t base);
 
 // Convert data from an ascii represented string into an integer type
 // Need to handle signed data
-int32_t my_atoi(uint32_t * str);
+int32_t my_atoi(uint8_t * str);
 
 // Convert data types in memory from a big endian representation to 
 // little endian
