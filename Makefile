@@ -34,11 +34,11 @@ ARCH ?= host
 LDFLAGS := -O0 -Wl,-Map=project.map
 CFLAGS := -DPROJECT_1 -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS)
 
-ifeq ( $ARCH, bbb )
+ifeq ($(ARCH),bbb)
     CC := arm-linux-gnueabihf-gcc
 
 else 
-ifeq ( $ARCH, frdm )
+ifeq ($(ARCH),frdm)
     CC := arm-none-eabi-gcc
     override CFLAGS := -DFRDM $(CFLAGS)
 
@@ -49,30 +49,30 @@ endif
 endif
 
 
-.PHONY: build
-# Compiles all object files and links
-build: $(OBJS)
-	$(CC) $(LDFLAGS) -o project main.o
- 
 .PHONY: %.o
 # Individually compiles any single object file
-%.o: %.c
+%.o: %.c %.h
 	$(CC) -c $(CFLAGS) $<
 
 .PHONY: %.s
 # Generates the assembly output of all files or a single file
-%.s: %.c
+%.s: %.c %.h
 	$(CC) -S $(CFLAGS) $<
 
 .PHONY: %.i
 # Generates the preprocessed output of all files or a single file
-%.i: %.c
+%.i: %.c %.h
 	$(CC) -E $(CFLAGS) $< > $@ 
 
 .PHONY: compile-all
 # Compiles the object files
 compile-all: $(SRCS) $(HDRS)
 	$(CC) -c $(CFLAGS) $^
+
+.PHONY: build
+# Compiles all object files and linksi
+build: compile-all $(OBJS) depend
+	$(CC) $(LDFLAGS) -o project main.o
 
 .PHONY: upload
 # Takes an executable and copies it over to a release directory on the beagle bone
@@ -82,15 +82,14 @@ upload:
 .PHONY: clean
 # Removes all compiled object, preprocessed output, assembly output, executables, and build output files
 clean:
-	rm -f project *.o *.s *.i *.map *.out
+	rm -f project *.o *.s *.i *.map *.out *.dep
 
 .PHONY: build-lib
 # Generates a library of your memory.c and data.c into an archive called libproject1.a
 build-lib: memory.c data.c
 	ar cr libproject1.a $+
 
-
-
 .PHONY: depend
-# Do we have dependencies in this project
-depend:
+# Generates a dependencies file for the build
+depend: $(SRCS) $(SRCS)
+	gcc -M $(CFLAGS) $^ > file_dependencies.dep
