@@ -48,15 +48,16 @@ else
 endif
 endif
 
+project: build
 
 .PHONY: %.o
 # Individually compiles any single object file
 %.o: %.c %.h
 	$(CC) -c $(CFLAGS) $<
 
-.PHONY: %.s
+.PHONY: %.S
 # Generates the assembly output of all files or a single file
-%.s: %.c %.h
+%.S: %.c %.h
 	$(CC) -S $(CFLAGS) $<
 
 .PHONY: %.i
@@ -70,13 +71,13 @@ compile-all: $(SRCS) $(HDRS)
 	$(CC) -c $(CFLAGS) $^
 
 .PHONY: build
-# Compiles all object files and linksi
-build: compile-all $(OBJS) depend
+# Compiles all object files and links
+build:  $(OBJS) depend
 	$(CC) $(LDFLAGS) -o project main.o
 
 .PHONY: upload
 # Takes an executable and copies it over to a release directory on the beagle bone
-upload:
+upload: 
 	scp project root@192.168.7.2:/home/debian/bin
 
 .PHONY: clean
