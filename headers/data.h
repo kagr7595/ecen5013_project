@@ -12,6 +12,7 @@
 
 #include "stdio.h"
 #include "stdint.h"
+#include "memory.h"
 
 /* Defines section
  * Add all #defines here
