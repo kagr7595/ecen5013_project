@@ -156,7 +156,7 @@ void project_1_report()
     printf("Modified array=\n");
     for (i = 0; i < ARRAY_LENGTH; i++)
     {
-        printf(" array[%2d]: %d\n",i,*(array+i));
+        printf(" array[%02d]: %d\n",i,*(array+i));
         if (((i+1)%4)==0) {printf("\n");}
     }
 
@@ -178,4 +178,6 @@ void project_1_report()
     printf("After little_to_big: %x\n", convert_little_to_big);
 
 
+    dump_memory(aptr_1, ARRAY_LENGTH);
+   
 }

@@ -18,7 +18,7 @@ int8_t my_itoa(uint8_t * str, int32_t data, int32_t base)
 
 // Convert data from an ascii represented string into an integer type
 // Need to handle signed data
-int32_t my_atoi(uint32_t * str)
+int32_t my_atoi(uint8_t * str)
 {
 
     return 0;
@@ -49,30 +49,11 @@ uint32_t little_to_big(uint32_t data)
 void dump_memory(uint8_t * start, uint32_t length)
 {
     uint32_t i;
-    uint32_t j;
-    uint8_t num_divides;
-    uint8_t return_code = 0;
-    uint8_t current_uint8;
-    uint8_t rem_array[POWER_2_64];
-    uint8_t hex_array[POWER_2_64];
 
+    printf("Dump array:\n");
     for (i = 0; i < length; i++) 
     {
-        current_uint8 = *(start+i);
-        num_divides = 0;
-        while(current_uint8 != 0)
-        {
-            *(rem_array+num_divides) = current_uint8 % 2;
-            current_uint8 = current_uint8 / 2;
-            
-            num_divides++;
-        }
-        printf("HEX output: ");
-        for (j = 0;j<num_divides; j++)
-        {
-            printf("%x",*(rem_array+num_divides-j));
-        }
-                
+        printf(" array[%d]:0x%x%x\n",i,*(start+i)>>4,(*(start+i)&0x0f));
+        if (((i+1)%4)==0) {printf("\n");}
     }
-
 }
