@@ -93,7 +93,7 @@ build-lib: memory.c data.c
 .PHONY: depend
 # Generates a dependencies file for the build
 depend: $(SRCS) $(HDRS)
-	gcc -M $(CFLAGS) $^ > file_dependencies.dep
+	$(CC) -M $(CFLAGS) $^ > file_dependencies.dep
 
 .PHONY: %.objdump
 # Runs objdump -S on the specified file and outputs to a file %.objdump
