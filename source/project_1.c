@@ -125,14 +125,14 @@ void project_1_report()
     return_code_error(convert_itoa6, MY_ITOA);
 
     // Tests a few values in atoi
-    int8_t strtest1[4] = "123\0";
-    int8_t strtest2[5] = "-123\0";
-    int8_t strtest3[3] = "72\0";
-    int8_t strtest4[4] = "-72\0";
-    int8_t test_atoi1 = my_atoi(strtest1); 
-    int8_t test_atoi2 = my_atoi(strtest2);
-    int8_t test_atoi3 = my_atoi(strtest3);
-    int8_t test_atoi4 = my_atoi(strtest4);
+    uint8_t strtest1[4] = "123\0";
+    uint8_t strtest2[5] = "-123\0";
+    uint8_t strtest3[6] = "10536\0";
+    uint8_t strtest4[7] = "-10536\0";
+    int32_t test_atoi1 = my_atoi(strtest1); 
+    int32_t test_atoi2 = my_atoi(strtest2);
+    int32_t test_atoi3 = my_atoi(strtest3);
+    int32_t test_atoi4 = my_atoi(strtest4);
 
 #ifndef FRDM
     printf("Testing atoi:\n");
@@ -140,9 +140,9 @@ void project_1_report()
     printf(" Integer value: %d\n\n", test_atoi1);
     printf(" Starting string: -123\n");
     printf(" Integer value: %d\n\n", test_atoi2);
-    printf(" Starting string: 72\n");
+    printf(" Starting string: 10536\n");
     printf(" Integer value: %d\n\n", test_atoi3);
-    printf(" Starting string: -72\n");
+    printf(" Starting string: -10536\n");
     printf(" Integer value: %d\n\n", test_atoi4);
 #endif
 }
