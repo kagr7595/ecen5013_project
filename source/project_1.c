@@ -91,36 +91,42 @@ void project_1_report()
 
     printf("Converting back with little_to_big endian:\n");
     printf("After little_to_big: %x\n\n", convert_little_to_big);
-
 #endif
 
 
+    // Try small data value itoa conversions
     int32_t int_convert = 643;
     int8_t convert_itoa1 = my_itoa(array,int_convert,2);
-    int8_t convert_itoa2 = my_itoa(array,int_convert,8);
-    int8_t convert_itoa3 = my_itoa(array,int_convert,16);
-
-    int_convert = 3315643;
-    int8_t convert_itoa4 = my_itoa(array,int_convert,2);
-    int8_t convert_itoa5 = my_itoa(array,int_convert,10);
-    int8_t convert_itoa6 = my_itoa(array,int_convert,13);
-
-    int_convert = -43;
-    int8_t convert_itoa7 = my_itoa(array,int_convert,6);
-    int8_t convert_itoa8 = my_itoa(array,int_convert,8);
-    int8_t convert_itoa9 = my_itoa(array,int_convert,16);
-
+    my_itoa_out(array,int_convert,2);
     return_code_error(convert_itoa1, MY_ITOA);
+
+    int8_t convert_itoa2 = my_itoa(array,int_convert,16);
+    my_itoa_out(array,int_convert,16);
     return_code_error(convert_itoa2, MY_ITOA);
+
+    // Try large data value itoa conversions
+    int_convert = 3315643;
+    int8_t convert_itoa3 = my_itoa(array,int_convert,10);
+    my_itoa_out(array,int_convert,10);
     return_code_error(convert_itoa3, MY_ITOA);
+
+    int8_t convert_itoa4 = my_itoa(array,int_convert,13);
+    my_itoa_out(array,int_convert,13);
     return_code_error(convert_itoa4, MY_ITOA);
+
+    // Try negative itoa conversions
+    int_convert = -43;
+    int8_t convert_itoa5 = my_itoa(array,int_convert,6);
+    my_itoa_out(array,int_convert,6);
     return_code_error(convert_itoa5, MY_ITOA);
+
+    int8_t convert_itoa6 = my_itoa(array,int_convert,8);
+    my_itoa_out(array,int_convert,8);
     return_code_error(convert_itoa6, MY_ITOA);
-    return_code_error(convert_itoa7, MY_ITOA);
-    return_code_error(convert_itoa8, MY_ITOA);
-    return_code_error(convert_itoa9, MY_ITOA);
+
    
 }
+
 
 void return_code_error(int8_t return_code, uint8_t function_name)
 {

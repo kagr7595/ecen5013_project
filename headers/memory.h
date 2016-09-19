@@ -13,6 +13,10 @@
 #include "stdio.h"
 #include "stdint.h"
 
+#ifdef FRDM
+#pragma GCC poison printf
+#endif
+
 /* Defines section
  * Add all #defines here
  ***************************************************************************/
