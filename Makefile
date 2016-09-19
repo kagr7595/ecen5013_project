@@ -66,7 +66,7 @@ endif
 
 .PHONY: compile-all
 # Compiles the object files
-compile-all: $(SRCS) $(HDRS)
+compile-all: $(SRCS)
 	$(CC) -c $(CFLAGS) $^
 
 .PHONY: build

@@ -20,7 +20,6 @@ SRCS := \
     memory.c   \
     data.c
 
-#OBJS := $(SRCS:$(INCSRC)/*.c = *.o) 
 OBJS := \
     main.o   \
     project_1.o   \
