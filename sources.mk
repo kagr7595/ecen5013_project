@@ -8,7 +8,27 @@
 #       
 ############################################################################
 
+INCHDRS := ./headers
 
+INCSRC := ./source
 
+VPATH = $(INCSRC) $(INCHDRS)
 
+SRCS := \
+    main.c   \
+    project_1.c   \
+    memory.c   \
+    data.c
+
+#OBJS := $(SRCS:$(INCSRC)/*.c = *.o) 
+OBJS := \
+    main.o   \
+    project_1.o   \
+    memory.o   \
+    data.o
+
+HDRS := \
+    project_1.h   \
+    memory.h   \
+    data.h
 
