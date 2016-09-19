@@ -1,7 +1,7 @@
 /***************************************************************************
 *
 *  	Filename: project_1.c
-*	Description: 
+*	Description: All requirements for Project 1 are run through this file
 *                    
 *       Author: Kathy Grimes 
 *               Dylan Way

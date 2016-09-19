@@ -40,8 +40,8 @@ ifeq ($(ARCH),bbb)
 else 
 ifeq ($(ARCH),frdm)
     CC := arm-none-eabi-gcc
-    override CFLAGS := -DFRDM $(CFLAGS)
-
+    override CFLAGS :=  -DFRDM $(CFLAGS)
+    override LDFLAGS := -lc -lrdimon $(LDFLAGS)
 else
     CC := gcc
 
@@ -71,7 +71,7 @@ compile-all: $(SRCS) $(HDRS)
 
 .PHONY: build
 # Compiles all object files and links
-build:  $(OBJS) depend
+build:  clean $(OBJS) depend
 	$(CC) $(LDFLAGS) -o project main.o
 	size project
 

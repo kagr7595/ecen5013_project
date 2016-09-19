@@ -1,7 +1,7 @@
 /***************************************************************************
 *
 *  	Filename: main.c
-*	Description: 
+*	Description: Calls project_1_report and is the top level c file
 *                    
 *       Author: Kathy Grimes 
 *               Dylan Way
