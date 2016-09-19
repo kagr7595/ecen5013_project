@@ -80,10 +80,10 @@ int32_t my_atoi(uint8_t * str)
     }
 
     //switch from numbers to ascii characters
-    while (*str + element_num != '\0')
+    while (*(str + element_num) != '\0')
     {
         out_value *= 10;
-	out_value += (*str + element_num) - '0';        
+	out_value += (*(str + element_num)) - '0';        
         element_num++;
     }
 

@@ -21,7 +21,6 @@
 #define MY_MEMZERO 2
 #define MY_REVERSE 3
 #define MY_ITOA    4
-#define MY_ATOI    5
 
 /* Function prototype Section
  * Add protoypes for all functions called by this module, with the exception

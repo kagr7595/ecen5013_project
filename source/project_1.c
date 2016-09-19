@@ -124,7 +124,27 @@ void project_1_report()
     my_itoa_out(array,int_convert,8);
     return_code_error(convert_itoa6, MY_ITOA);
 
-   
+    // Tests a few values in atoi
+    int8_t strtest1[4] = "123\0";
+    int8_t strtest2[5] = "-123\0";
+    int8_t strtest3[3] = "72\0";
+    int8_t strtest4[4] = "-72\0";
+    int8_t test_atoi1 = my_atoi(strtest1); 
+    int8_t test_atoi2 = my_atoi(strtest2);
+    int8_t test_atoi3 = my_atoi(strtest3);
+    int8_t test_atoi4 = my_atoi(strtest4);
+
+#ifndef FRDM
+    printf("Testing atoi:\n");
+    printf(" Starting string: 123\n");
+    printf(" Integer value: %d\n\n", test_atoi1);
+    printf(" Starting string: -123\n");
+    printf(" Integer value: %d\n\n", test_atoi2);
+    printf(" Starting string: 72\n");
+    printf(" Integer value: %d\n\n", test_atoi3);
+    printf(" Starting string: -72\n");
+    printf(" Integer value: %d\n\n", test_atoi4);
+#endif
 }
 
 
@@ -191,22 +211,6 @@ void return_code_error(int8_t return_code, uint8_t function_name)
             case 2: printf("ERROR: base is needs to be between 2 and 16 inclusive in my_itoa\n");
                 break;
             case 3: printf("ERROR: error in my_reverse call in my_itoa\n");
-                break;
-            default: printf("ERROR: Something unexpected occurred in my_reverse\n");
-                break;
-            }   
-            break;
-        case 5:
-            // print out statement of what error occurred in my_atoi functionNOT DONE YET
-            switch(return_code)
-            {
-            case 1: printf("ERROR: src pointer is NULL in my_reverse\n");
-                break;
-            case 2: printf("ERROR: length is less than or equal to 0 in my_reverse\n");
-                break;
-            case 3: printf("ERROR: my_memmove failed in my_reverse\n");
-                break;
-            case 4: printf("ERROR: src and orig_copy_src were not reverse of each other in my_reverse\n");
                 break;
             default: printf("ERROR: Something unexpected occurred in my_reverse\n");
                 break;
