@@ -13,7 +13,6 @@
 int8_t my_itoa(uint8_t * str, int32_t data, int32_t base)
 {
     uint32_t temp; 
-    uint16_t i; 
     uint16_t num_elements; 
     uint8_t return_code = 0;
     
@@ -57,13 +56,6 @@ int8_t my_itoa(uint8_t * str, int32_t data, int32_t base)
 
     *(str+num_elements) = '\0';  
     num_elements++;
-
-    printf("Given data: %d, new base: %d\nASCII str:",data,base);
-    for (i = 0; i<num_elements; i++)
-    {
-        printf("%c",*(str+i));
-    }                                  
-    printf("\n");
     
     return 0;
 }
@@ -124,10 +116,13 @@ uint32_t little_to_big(uint32_t data)
     return data_out;
 }
 
+
 // Takes pointer to memory and length of bytes to print 
 // and prints the hex output
 void dump_memory(uint8_t * start, uint32_t length)
 {
+
+#ifndef FRDM
     uint32_t i;
     if(start == NULL) {printf("ERROR: src pointer is NULL in dump_array\n");}
     else if (length <= 0) {printf("ERROR: length is less than or equal to 0 in dump_array\n");}
@@ -136,8 +131,26 @@ void dump_memory(uint8_t * start, uint32_t length)
         printf("Dump array:\n");
         for (i = 0; i < length; i++) 
         {
-            printf(" array[%d]:0x%x%x\n",i,*(start+i)>>4,(*(start+i)&0x0f));
+            printf(" array[%02d]:0x%x%x\n",i,*(start+i)>>4,(*(start+i)&0x0f));
             if (((i+1)%4)==0) {printf("\n");}
         }
     }
+#endif
 }
+
+
+void my_itoa_out(uint8_t * string, int32_t data, int32_t base)
+{    
+#ifndef FRDM
+    uint8_t i;
+
+    printf("Given data: %d, base: %d\nASCII str:",data,base);
+    for (i = 0; *(string+i)!='\0'; i++)
+    {
+        printf("%c",*(string+i));
+    }                       
+    printf("\n\n");
+#endif
+}
+
+

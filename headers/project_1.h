@@ -10,10 +10,8 @@
 #ifndef _PROJECT_1_H
 #define _PROJECT_1_H
 
-#include "stdio.h"
-#include "stdint.h"
-#include "memory.c"
 #include "data.c"
+#include "memory.c"
 
 /* Defines section
  * Add all #defines here
@@ -42,5 +40,6 @@ void project_1_report();
 
 // Prints out the error that occurred in each function 
 void return_code_error(int8_t return_code, uint8_t function_name);
+
 
 #endif

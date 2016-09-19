@@ -10,9 +10,11 @@
 #ifndef _DATA_H
 #define _DATA_H
 
-#include "stdio.h"
-#include "stdint.h"
 #include "memory.h"
+
+#ifdef FRDM
+#pragma GCC poison printf
+#endif
 
 /* Defines section
  * Add all #defines here
@@ -41,5 +43,8 @@ uint32_t little_to_big(uint32_t data);
 // Takes pointer to memory and length of bytes to print 
 // and prints the hex output
 void dump_memory(uint8_t * start, uint32_t length);
+
+// Prints output for my_itoa function
+void my_itoa_out(uint8_t * string, int32_t data, int32_t base);
 
 #endif
