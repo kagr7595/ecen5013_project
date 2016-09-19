@@ -69,11 +69,39 @@ int8_t my_itoa(uint8_t * str, int32_t data, int32_t base)
 }
 
 // Convert data from an ascii represented string into an integer type
+// Assumes the ascii is a number represented in base 10
 // Need to handle signed data
 int32_t my_atoi(uint8_t * str)
-{
+{    
+    uint32_t out_value = 0; 
+    uint16_t element_num = 0; 
+    uint8_t neg = 0;
+    
+    //returns 0 if there is no str
+    if(str == NULL) {return 0;}
 
-    return 0;
+    // if data is a negative number
+    if(*str == '-')
+    {
+        neg = 1;
+        element_num++;
+    }
+
+    //switch from numbers to ascii characters
+    while (*str + element_num != '\0')
+    {
+        out_value *= 10;
+	out_value += (*str + element_num) - '0';        
+        element_num++;
+    }
+
+    // if data is negative, convert to two's comp
+    if (neg)
+    {
+        out_value = ~(out_value - 1); 
+    }
+
+    return out_value;
 }
 
 // Convert data types in memory from a big endian representation to 
