@@ -56,12 +56,12 @@ endif
 
 .PHONY: %.S
 # Generates the assembly output of all files or a single file
-%.S: %.c %.h
+%.S: %.c
 	$(CC) -S $(CFLAGS) $<
 
 .PHONY: %.i
 # Generates the preprocessed output of all files or a single file
-%.i: %.c %.h
+%.i: %.c
 	$(CC) -E $(CFLAGS) $< > $@ 
 
 .PHONY: compile-all
