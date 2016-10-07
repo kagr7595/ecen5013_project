@@ -7,7 +7,11 @@
 *               Dylan Way
 *       
 ****************************************************************************/
+#ifndef _MEMORY_C
+#define _MEMORY_C
+
 #include "memory.h"
+
 // Take two pointers (one source and one destination) and a length of bytes
 // to move from one location to the other
 // Checks overlapped areas between the two memory blocks
@@ -117,3 +121,4 @@ int8_t my_reverse(uint8_t * src, uint32_t length)
     return 0;
 }
 
+#endif

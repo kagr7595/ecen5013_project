@@ -7,11 +7,26 @@
 *               Dylan Way
 *       
 ****************************************************************************/
+
+#ifdef PROJECT_1
 #include "project_1.c"
+#endif
+
+#ifdef PROJECT_2
+#include "project_2.c"
+#endif
+
 
 int main()
 {
-    project_1_report();
+#ifdef PROJECT_1
+  project_1_report();
+#endif
+
+#ifdef PROJECT_2
+  project_2_report();
+#endif
+
 
     return 0;
 }
