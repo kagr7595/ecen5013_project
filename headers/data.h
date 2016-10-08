@@ -18,7 +18,6 @@
 
 /* Defines and Structures section
  ***************************************************************************/
-#define ONEEFIFTEEN 1000000000000000ll
 #define LARGEST_FLOAT_HANDLED 18446744073709551615.999999
 
 // Floating point structure
@@ -57,9 +56,6 @@ void dump_memory(uint8_t * start, uint32_t length);
 
 // Prints output for my_itoa function
 void my_itoa_out(uint8_t * string, int32_t data, int32_t base);
-
-// Convert data from a 32 bit floating point integer type into an asci string
-int8_t my_ftoa1(uint8_t * str, int32_t data);
 
 // Convert data from a standard float type into an asci string
 int8_t my_ftoa(uint8_t * str, float data);

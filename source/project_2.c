@@ -16,7 +16,6 @@
 
 void project_2_report()
 {
-    uint32_t i;
     int8_t return_code = 0;
     
     
