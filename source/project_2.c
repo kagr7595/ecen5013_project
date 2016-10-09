@@ -24,12 +24,12 @@ void project_2_report()
     
     float f1 = -7.5;
     float f2 = 1543.321;
-    float f3 = -4.0E37;
-    float f4 = 4.0E37;
+    float f3 = 4.0E18;
+    float f4 = 3.402823E38;
     float f5 = 1.65432E-2;
     float f6 = .001;
     float f7 = -0.00001;
-    float f8 = 1.132654325544517632E17;
+    float f8 = 1.132654325544517632E18;
     float f9 = .0005;
 
 //    my_ftoa1(array,0xC0F00000);

@@ -18,22 +18,34 @@
 
 /* Defines and Structures section
  ***************************************************************************/
-#define LARGEST_FLOAT_HANDLED 18446744073709551615.999999
+#define LARGEST_FLOAT_HANDLED_64 18446744073709551615.999999
+#define LARGEST_FLOAT_HANDLED_128 3.4028236692093846349337E38
 
 // Floating point structure
 typedef union {
     struct {	
         uint32_t MANTISSA : 23;
-        uint32_t EXP : 8;
+        int32_t EXP : 8;
         uint32_t SIGN : 1;
     };
-    uint32_t reg;
+    float reg_float;
+    uint32_t reg_uint32;
 } Float_point;
+
+typedef struct uint128 {
+    uint32_t upper;
+    uint32_t upper_mid;
+    uint32_t lower_mid;
+    uint32_t lower;
+} uint128_t;
 
 /* Function prototype Section
  * Add protoypes for all functions called by this module, with the exception
  * of runtime routines.
  ***************************************************************************/
+// Performs division on the uint128 variable type and returns the remainder
+uint32_t uint128_div_remain(uint128_t * dividend, uint32_t divisor);
+
 // Convert data from a standard integer type into an asci string
 // Need to handle signed data
 int8_t my_itoa(uint8_t * str, int32_t data, int32_t base);

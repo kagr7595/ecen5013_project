@@ -12,12 +12,86 @@
 
 #include "data.h"
 
+// Performs division on the uint128 variable type and returns the remainder
+uint32_t uint128_div_remain(uint128_t * dividend, uint32_t divisor)
+{
+    // starts by dividing upper 32 bits
+    uint64_t temp = 0;
+    temp = dividend->upper%divisor;
+    dividend->upper /= divisor;
+    temp = dividend->upper_mid + (temp << 32);
+    
+    // remainder from upper 32 is added to the upper_mid 32 bits which is then divided
+    dividend->upper_mid = temp/divisor;
+    temp = dividend->lower_mid + ((temp%divisor) << 32);
+
+    // remainder from upper_mid 32 is added to the lower_mid 32 bits which is then divided
+    dividend->lower_mid = temp/divisor;
+    temp = dividend->lower + ((temp%divisor) << 32);
+    
+    // remainder from lower_mid 32 is added to the lower 32 bits which is then divided
+    dividend->lower = temp/divisor;
+
+    // return remainder
+    return temp%divisor;
+}
 
 // Convert data from a standard float type into an asci string
 // Always 3 decimal places are printed out if there is any decimal portion
 int8_t my_ftoa(uint8_t * str, float data)
 {
-    uint64_t fint = 0;
+    Float_point myFloat;
+    myFloat.reg_float = data;
+    myFloat.EXP = myFloat.EXP - 127;
+    uint64_t man = myFloat.MANTISSA | 0x00800000;
+    uint128_t fint128;
+
+    // The parts of the float are converted to be represented as a 128 bit integer
+    // This is done by breaking the 128 bit representation into 4 32 bit integers
+    // upper 32
+    if( myFloat.EXP >= 96) {
+        if( (myFloat.EXP - (23 + 96)) > 0 ) { 
+            fint128.upper = man << ((myFloat.EXP - 23) - 96);
+        } else {
+            fint128.upper = man >> (-1*((myFloat.EXP - 23) - 96));
+        }
+    } else {
+        fint128.upper = 0;
+    }
+
+    // upper_mid 32
+    if( myFloat.EXP >= 64) {
+        if( (myFloat.EXP - (23 + 64)) > 0 ) {
+            fint128.upper_mid = man << ((myFloat.EXP - 23) - 64);
+        } else {
+            fint128.upper_mid = man >> (-1*((myFloat.EXP - 23) - 64));
+        }
+    } else {
+        fint128.upper_mid = 0;
+    }
+
+    // lower_mid 32
+    if( myFloat.EXP >= 32) {
+        if( (myFloat.EXP - (23 + 32)) > 0 ) {
+            fint128.lower_mid = man << ((myFloat.EXP - 23) - 32);
+        } else {
+            fint128.lower_mid = man >> (-1*((myFloat.EXP - 23) - 32));
+        }
+    } else {
+        fint128.lower_mid = 0;
+    }
+ 
+    // lower 32
+    if( myFloat.EXP >= 0) {
+        if( (myFloat.EXP - 23) > 0 ) {
+            fint128.lower = man << (myFloat.EXP - 23);
+        } else {
+            fint128.lower = man >> (-1*(myFloat.EXP - 23));
+        }
+    } else {
+        fint128.lower = 0;
+    }
+
     float ffract = 0;
     uint16_t ffract_int = 0;
     uint16_t num_elements; 
@@ -31,15 +105,14 @@ int8_t my_ftoa(uint8_t * str, float data)
     if(data<0)
     {
 	fsign = 1;
-	data = data * -1;
+        data = data * -1;
     }
     if (data<.0001f)
     {
-	fint = 0;
 	ffract = 0.000;
 	// change sign to 0 as 0.000 is neither negative or positive
 	fsign = 0;
-    } else if (data>LARGEST_FLOAT_HANDLED)
+    } else if ((data > LARGEST_FLOAT_HANDLED_128) || (data < -1*LARGEST_FLOAT_HANDLED_128))
     {
 	if (fsign == 1)
 	{
@@ -55,26 +128,19 @@ int8_t my_ftoa(uint8_t * str, float data)
 	    printf("\n   ERROR: Float is too large to compute for this ftoa function\n\n");
 	    return 3;
 	}
-    } else
-    {    
-	//Changing the full float number into an integer (so we only get integer portion and not the decimal)
-	fint = (uint64_t)data;
-	//now that we have the integer portion, Subtract the integer portion from the full float data to get the decimal/fraction portion
-	ffract = data - (float)fint; 
+    } else {
+        //For the cases where the integer is really large and struct for uint128 will be used below for ftoa conversion
+        //fractional portion won't exist because the exponent is too large for the mantissa to allow for this precision
+        ffract = data - (float)((uint64_t)data);
     }
-    
-    // add .0005 for rounding.  The .0001 place will be cut off as rounding to 3 decimal places 
+
+    //add .0005 for rounding.  The .0001 place will be cut off as rounding to 3 decimal places 
     ffract = ffract + .0005;
     
     // Finished getting correct sign, integer, and fraction parts of float number
     // Now to change from a number into an ascii and put into pointer str
     
     ffract_int = ffract*1000;
-    
-    //***printf("\n   float sign = %0d\n",fsign);
-    //***printf("    float int = %0ld\n",fint);
-    //***printf("  float fract = %0d\n",ffract_int);
-    
     
     /* Switch from numbers to ascii characters */
     if (ffract_int > 0)
@@ -96,20 +162,20 @@ int8_t my_ftoa(uint8_t * str, float data)
         *(str + num_elements) = '.';
         num_elements++;
     }  
-    if (fint > 0)
+
+    //add if statement case for use of fint128
+    for (; ((fint128.lower != 0) || (fint128.lower_mid != 0) || (fint128.upper_mid != 0) || (fint128.upper != 0)); num_elements++)
     {
-        // add int portion LSB->MSB
-        for (; fint != 0; num_elements++)
-        {
-            *(str + num_elements) = fint%base + '0';
-            fint = fint/base;
-        }
-    } else
-    {	
-        *(str + num_elements) = '0';
-	num_elements++;
+        *(str + num_elements) = uint128_div_remain(&fint128, base) + '0';
     }
-    
+
+    // zero pad if just a fraction
+    if ( (*(str + num_elements - 1)) == '.')
+    {
+        *(str + num_elements) = '0';
+        num_elements++;
+    }
+
     // if data is negative, change the largest bit (sign bit) in str to 1
     if (fsign)
     {
@@ -119,14 +185,19 @@ int8_t my_ftoa(uint8_t * str, float data)
     
     //reverse array of remainders to get ascii string of data without sign
     return_code = my_reverse(str, num_elements);
-    if(return_code != 0){return 4;}
-    
+    if((return_code != 0) && (return_code != 2)){return 4;}
+
+    if(return_code == 2) 
+    {
+        *(str + num_elements) = '0';
+        num_elements++;
+    }   
+ 
     *(str + num_elements) = '\0';  
     num_elements++;
     
     return 0;
 }
-
 
 
 
