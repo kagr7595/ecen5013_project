@@ -17,6 +17,8 @@
 #include "memory.h"
 #include "circbuf.h"
 #include "timer.h"
+#include "ftoa_utests.h"
+#include "buf_utests.h"
 
 #ifdef FRDM
 #include "uart.h"
