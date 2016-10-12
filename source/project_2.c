@@ -11,6 +11,7 @@
 #ifndef _PROJECT_2_C
 #define _PROJECT_2_C
 
+#include "log.h"
 #include "error.h"
 #include "data.h"
 #include "memory.h"
@@ -18,10 +19,7 @@
 #ifdef FRDM
 #include "uart.h"
 #include "RGB.h"
-#else
-#include "error.h"
 #endif
-#include "log.h"
 #include "project_2.h"
 
 
@@ -47,47 +45,47 @@ void project_2_report()
     float f9 = .0005;
 
     return_code = my_ftoa(array,f1);
-    //return_code_error(return_code, MY_FTOA);
+    return_code_error(return_code, MY_FTOA);
     if(!return_code)
     	LOG_1(ftoa_string, 6, array, count2null(array));
 
     return_code = my_ftoa(array,f2); 
-    //return_code_error(return_code, MY_FTOA);
+    return_code_error(return_code, MY_FTOA);
     if(!return_code)
     	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f3); 
-    //return_code_error(return_code, MY_FTOA);
+    return_code_error(return_code, MY_FTOA);
     if(!return_code)
     	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f4); 
-    //return_code_error(return_code, MY_FTOA);
+    return_code_error(return_code, MY_FTOA);
     if(!return_code)
     	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f5); 
-    //return_code_error(return_code, MY_FTOA);
+    return_code_error(return_code, MY_FTOA);
     if(!return_code)
     	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f6); 
-    //return_code_error(return_code, MY_FTOA);
+    return_code_error(return_code, MY_FTOA);
     if(!return_code)
     	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f7); 
-    //return_code_error(return_code, MY_FTOA);
+    return_code_error(return_code, MY_FTOA);
     if(!return_code)
     	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f8); 
-    //return_code_error(return_code, MY_FTOA);
+    return_code_error(return_code, MY_FTOA);
     if(!return_code)
     	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f9); 
-    //return_code_error(return_code, MY_FTOA);
+    return_code_error(return_code, MY_FTOA);
     if(!return_code)
     	LOG_1(ftoa_string,6,array,count2null(array));
 #endif
@@ -310,14 +308,14 @@ void project_2_report()
         }
         set_PWM_RGB(duty, color);
 
+    }
 
-    uint8_t msg[10] = "UART ON!!\n";
-    uart_tx_data(msg, 10);
+    uint8_t msg1[10] = "UART ON!!\n";
+    uart_tx_data(msg1, 10);
     while(1) {
-    	uart_rx_data(msg, 1);
-    	uart_tx_data(msg, 1);
+    	uart_rx_data(msg1, 1);
+    	uart_tx_data(msg1, 1);
     }
 #endif
 }
-
-#endif 
+#endif
