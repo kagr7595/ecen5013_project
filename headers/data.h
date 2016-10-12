@@ -78,4 +78,7 @@ int8_t my_ftoa(uint8_t * str, float data);
 // Prints output for my_ftoa function
 void my_ftoa_out(uint8_t * string, float data);
 
+// Count length of asci string until '/0'
+int8_t counter2null(uint8_t * str);
+
 #endif

@@ -20,16 +20,20 @@
 #else
 #include "error.h"
 #endif
+#include "log.h"
 #include "project_2.h"
 
 
 void project_2_report()
 {
     int8_t return_code = 0;
-
+#ifdef FRDM
+    init_uart();
+#endif
 #ifdef FTOATEST
     /* Create unsigned array of 70 bytes */
     uint8_t array[ARRAY_LENGTH_70];
+    uint8_t ftoa_string[6] = "FTOA: ";
     
     float f1 = -7.5;
     float f2 = 1543.321;
@@ -44,47 +48,47 @@ void project_2_report()
     return_code = my_ftoa(array,f1);
     //return_code_error(return_code, MY_FTOA);
     if(!return_code)
-      my_ftoa_out(array,f1);
+    	LOG_1(ftoa_string, 6, array, count2null(array));
 
     return_code = my_ftoa(array,f2); 
     //return_code_error(return_code, MY_FTOA);
     if(!return_code)
-      my_ftoa_out(array,f2);
+    	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f3); 
     //return_code_error(return_code, MY_FTOA);
     if(!return_code)
-      my_ftoa_out(array,f3);
+    	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f4); 
     //return_code_error(return_code, MY_FTOA);
     if(!return_code)
-      my_ftoa_out(array,f4);
+    	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f5); 
     //return_code_error(return_code, MY_FTOA);
     if(!return_code)
-      my_ftoa_out(array,f5);
+    	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f6); 
     //return_code_error(return_code, MY_FTOA);
     if(!return_code)
-      my_ftoa_out(array,f6);
+    	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f7); 
     //return_code_error(return_code, MY_FTOA);
     if(!return_code)
-      my_ftoa_out(array,f7);
+    	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f8); 
     //return_code_error(return_code, MY_FTOA);
     if(!return_code)
-      my_ftoa_out(array,f8);
+    	LOG_1(ftoa_string,6,array,count2null(array));
 
     return_code = my_ftoa(array,f9); 
     //return_code_error(return_code, MY_FTOA);
     if(!return_code)
-      my_ftoa_out(array,f9);
+    	LOG_1(ftoa_string,6,array,count2null(array));
 #endif
 
 
@@ -266,9 +270,25 @@ void project_2_report()
 
 #endif
 
+#ifdef TEST_LOGGER
+    uint8_t  n1 = 200;
+    uint16_t n2 = 4096;
+    uint32_t n3 = 123456;
+    float f0 = 1543.321;
+    LOG_0("Testing123, Serial Print Test, no params\n",41);
+    my_itoa(array,(int32_t)n1,10);
+    LOG_1("This is an integer number: ",27,array,count2null(array));
+    my_itoa(array,(int32_t)n2,10);
+    LOG_1("This is an integer number: ",27,array,count2null(array));
+    my_itoa(array,n3,10);
+    LOG_1("This is an integer number: ",27,array,count2null(array));
+    my_ftoa(array,f0);
+    LOG_1("This is a floating point number: ",33,array,count2null(array));
+#endif
+
+
 #ifdef FRDM
-    init_uart();
-    uint8_t msg[10] = "IT WORKS!!";
+    uint8_t msg[10] = "UART ON!!\n";
     uart_tx_data(msg, 10);
     while(1) {
     	uart_rx_data(msg, 1);

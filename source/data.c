@@ -370,5 +370,11 @@ void my_itoa_out(uint8_t * string, int32_t data, int32_t base)
 #endif
 }
 
+uint8_t count2null(uint8_t * string)
+{
+	uint8_t counter = 0;
+	while(*(string+counter) != '\0') {counter++;};
+	return counter;
+}
 
 #endif
