@@ -10,26 +10,19 @@
 #ifndef _PROJECT_2_H
 #define _PROJECT_2_H
 
-#include "data.c"
-#include "memory.c"
+#include "data.h"
+#include "memory.h"
+#include "circbuf.h"
+#include "uart.h"
 
 /* Defines section
  * Add all #defines here
  ***************************************************************************/
-#define ARRAY_LENGTH_70 70
 
 /* Function prototype Section
  * Add protoypes for all functions called by this module, with the exception
  * of runtime routines.
  ***************************************************************************/
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-// 
 // 
 void project_2_report();
 

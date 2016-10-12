@@ -10,7 +10,9 @@
 #ifndef _DATA_H
 #define _DATA_H
 
-#include "memory.c"
+#include <stdint.h>
+#include <stdio.h>
+#include "memory.h"
 
 #ifdef FRDM
 #pragma GCC poison printf

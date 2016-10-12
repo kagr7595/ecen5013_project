@@ -10,6 +10,8 @@
 #ifndef _ERROR_H
 #define _ERROR_H
 
+#include <stdint.h>
+#include <stdio.h>
 
 /* Defines section
  * Add all #defines here

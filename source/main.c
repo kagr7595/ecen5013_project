@@ -1,7 +1,7 @@
 /***************************************************************************
 *
 *  	Filename: main.c
-*	Description: Calls project_1_report and is the top level c file
+*	Description: Calls project_1_report and project_2_report and is the top level c file
 *                    
 *       Author: Kathy Grimes 
 *               Dylan Way
@@ -9,11 +9,11 @@
 ****************************************************************************/
 
 #ifdef PROJECT_1
-#include "project_1.c"
+#include "project_1.h"
 #endif
 
 #ifdef PROJECT_2
-#include "project_2.c"
+#include "project_2.h"
 #endif
 
 

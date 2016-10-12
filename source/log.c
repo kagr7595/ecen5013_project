@@ -10,6 +10,8 @@
 #ifndef _LOG_C
 #define _LOG_C
 
+#include "log.h"
+
 // Logging to UART or to terminal with a simple string and length of characters in string
 // void LOG_0(<type> * data, <type> len)
 void LOG_0(uint8_t * data, uint64_t len)

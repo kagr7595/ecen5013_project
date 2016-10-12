@@ -10,12 +10,16 @@
 #ifndef _UART_H
 #define _UART_H
 
-#include "frdm.h"
-// #include "core_cm0plus.h" DO I NEED YOU?  FOUND YOU ONLINE>>>>LOTS OF DEFS
+#include "MKL25Z4.h"
+#include "core_cm0plus.h"
+//#include "startup_MKL25Z4.S"
+#include "circbuf.h"
 
 /* Defines and Structures section
  ***************************************************************************/
-
+#define BUF_LENGTH 100
+#define OVER_S 16
+#define BAUD 9600
 
 /* Function prototype Section
  * Add protoypes for all functions called by this module, with the exception
@@ -23,20 +27,15 @@
  ***************************************************************************/
 
 // UART Receive data to be stored into another pointer for processing
-void uart_rx_data(.....);
-
+void uart_rx_data(uint8_t *read, uint8_t length);
 
 // UART send data to uart
-void uart_tx_data(.....);
+void uart_tx_data(uint8_t *send, uint8_t length);
 
-// Initialize clock
-// Example: Baud rate of 115200 means 115200 bits are sent persecond
-// RS232 format requires 10 bits to send each byte,
-// (1starting, 8 data, 1 ending, *1parity*) (parity is optional 11th bit)
-// so at 115200 baud you can send 11520 bytes per second
-void clock_init(......);
+// Sets up UART0 registers
+void init_uart(void);
 
-// There should be a defined function for this one?
-void uart_irq(......);
+// IRQ handler routine for when a character is received
+//void UART0_IRQHandler(void); //__attribute__((interrupt("IRQ")));
 
 #endif

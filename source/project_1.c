@@ -12,6 +12,10 @@
 
 #include "project_1.h"
 
+#ifdef FRDM
+#pragma GCC poison printf
+#endif
+
 // Create unsigned array of 32 bytes
 // Create three pointers to three various points in this array
 // Initialize memroy at two of the pointers

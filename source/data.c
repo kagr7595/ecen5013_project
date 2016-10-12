@@ -118,14 +118,18 @@ int8_t my_ftoa(uint8_t * str, float data)
 	{
 	    // large negative number rounds to zero
 	    // TODO: add a return code print statement to the return_error_code function
-	    printf("Given data = %0lf",data);
-	    printf("\n   ERROR: Negative float is too small to compute for this ftoa function\n\n");
+#ifndef FRDM
+    	printf("Given data = %0lf",data);
+    	printf("\n   ERROR: Negative float is too small to compute for this ftoa function\n\n");
+#endif
 	    return 2;
 	} else 
 	{
 	    // TODO: add a return code print statement to the return_error_code function
-	    printf("Given data = %0lf",data);
-	    printf("\n   ERROR: Float is too large to compute for this ftoa function\n\n");
+#ifndef FRDM
+    	printf("Given data = %0lf",data);
+    	printf("\n   ERROR: Float is too large to compute for this ftoa function\n\n");
+#endif
 	    return 3;
 	}
     } else {

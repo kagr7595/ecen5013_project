@@ -12,7 +12,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include "error.c"
+//#include "error.c"
 
 #ifdef FRDM
 #pragma GCC poison printf

@@ -10,6 +10,7 @@
 #ifndef _LOG_H
 #define _LOG_H
 
+#include <stdint.h>
 
 /* Defines and Structures section
  ***************************************************************************/
