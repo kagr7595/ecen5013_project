@@ -113,4 +113,5 @@ int8_t destroy_buffer(CircBuf_t **cb_ptr) {
     // Then free the struct
     free(*cb_ptr);
     *cb_ptr = NULL;
+    return 0;
 }
