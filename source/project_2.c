@@ -17,10 +17,12 @@
 #include "memory.h"
 #include "circbuf.h"
 #include "timer.h"
+
 #ifdef FRDM
 #include "uart.h"
 #include "RGB.h"
 #endif
+
 #include "project_2.h"
 
 
@@ -30,6 +32,7 @@ void project_2_report()
 #ifdef FRDM
     init_uart();
 #endif
+
 #ifdef FTOATEST
     /* Create unsigned array of 70 bytes */
     uint8_t array[ARRAY_LENGTH_70];
@@ -308,18 +311,7 @@ void project_2_report()
         	color++;
         }
         set_PWM_RGB(duty, color);
-<<<<<<< HEAD
     	uart_rx_data(msg, 1);
-=======
-
-    }
-
-    uint8_t msg1[10] = "UART ON!!\n";
-    uart_tx_data(msg1, 10);
-    while(1) {
-    	uart_rx_data(msg1, 1);
-    	uart_tx_data(msg1, 1);
->>>>>>> origin/develop
     }
 
 #endif

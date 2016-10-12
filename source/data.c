@@ -98,7 +98,7 @@ int8_t my_ftoa(uint8_t * str, float data)
 
     float ffract = 0;
     uint16_t ffract_int = 0;
-    uint16_t num_elements; 
+    uint16_t num_elements = 0;
     uint8_t fsign = 0;
     uint8_t base = 10;
     int8_t return_code;
@@ -121,7 +121,6 @@ int8_t my_ftoa(uint8_t * str, float data)
 	if (fsign == 1)
 	{
 	    // large negative number rounds to zero
-	    // TODO: add a return code print statement to the return_error_code function
 #ifndef FRDM
     	printf("Given data = %0lf",data);
     	printf("\n   ERROR: Negative float is too small to compute for this ftoa function\n\n");
@@ -129,7 +128,6 @@ int8_t my_ftoa(uint8_t * str, float data)
 	    return 2;
 	} else 
 	{
-	    // TODO: add a return code print statement to the return_error_code function
 #ifndef FRDM
     	printf("Given data = %0lf",data);
     	printf("\n   ERROR: Float is too large to compute for this ftoa function\n\n");
@@ -161,10 +159,10 @@ int8_t my_ftoa(uint8_t * str, float data)
         }
         // if the ffract_int is not over 99, it will need an 0.  Same with over 9 (will need two 0s)
         while (num_elements < 3)
-	{
+        {
             *(str + num_elements) = '0';
             num_elements++;
-	}
+        }
         
         // add decimal sign
         *(str + num_elements) = '.';
@@ -214,7 +212,7 @@ int8_t my_ftoa(uint8_t * str, float data)
 int8_t my_itoa(uint8_t * str, int32_t data, int32_t base)
 {
     uint32_t temp; 
-    uint16_t num_elements; 
+    uint16_t num_elements = 0;
     uint8_t return_code = 0;
     
     
@@ -227,7 +225,6 @@ int8_t my_itoa(uint8_t * str, int32_t data, int32_t base)
         temp = ~data+1;
     } else
     {
-	// TODO: add a return code print statement to the return_error_code function
         temp = data;
     }
     
