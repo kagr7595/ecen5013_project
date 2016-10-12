@@ -17,6 +17,7 @@
 #include "circbuf.h"
 #ifdef FRDM
 #include "uart.h"
+#include "RGB.h"
 #else
 #include "error.h"
 #endif
@@ -288,11 +289,33 @@ void project_2_report()
 
 
 #ifdef FRDM
+    RGB_init();
+    int8_t color = RED;
+    uint8_t duty = 100;
+    uint8_t msg[1];
+    uart_rx_data(msg, 1);
+    uart_tx_data(msg, 1);
+    while(*msg != 'q') {
+        if ((*msg == 'a') && (color > 0)) {
+            color--;
+        }
+        else if ((*msg == 'w') && (duty < 100)) {
+        	duty = duty + 10;
+        }
+        else if ((*msg == 's') && (duty > 0)) {
+        	duty = duty - 10;
+        }
+        else if ((*msg == 'd') && (color < 7)) {
+        	color++;
+        }
+        set_PWM_RGB(duty, color);
+
+
     uint8_t msg[10] = "UART ON!!\n";
     uart_tx_data(msg, 10);
     while(1) {
     	uart_rx_data(msg, 1);
-        uart_tx_data(msg, 1);
+    	uart_tx_data(msg, 1);
     }
 #endif
 }
