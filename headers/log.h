@@ -23,11 +23,11 @@
 
 // Logging with a simple string and length of characters in string
 // void LOG_0(<type> * data, <type> len)
-void LOG_0(uint8_t * data, uint64_t len);
+void LOG_0(uint8_t * data, uint8_t len);
 
 
-//Logging a string with specific lenth of characters and appending a parameter
+//Logging a string with specific length of characters and appending a parameter
 //void LOG_1(<type> * data, <type> len, <type> * param, <type> data_type_size)
-void LOG_1(uint8_t * data, uint64_t len, uint32_t * param,  uint32_t data_type_size);
+void LOG_1(uint8_t * data, uint8_t len,  uint8_t * intfl,  uint8_t intfl_len);
 
 #endif

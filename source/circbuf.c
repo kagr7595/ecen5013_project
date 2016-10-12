@@ -6,6 +6,7 @@
 *   Author: Dylan Way
 *       
 ****************************************************************************/
+#include "log.h"
 #include "circbuf.h"
 
 // Creates a buffer by allocating it on the heap.
@@ -83,25 +84,25 @@ int8_t remove_buffer_item(volatile CircBuf_t *cb, uint8_t *item) {
 int8_t print_buffer(volatile CircBuf_t *cb) {
     uint8_t count = 0;
 
-    printf("  Buffer: ");
+    LOG_0("  Buffer: ",10);
     while( count < cb->size ) {
         if ( cb->head > cb-> tail) {
             if ( cb->num_items == 0 ) {;}
             else if ( ((cb->buffer + count) >= (cb->head)) || ((cb->buffer + count) <= (cb->tail)) )
-                printf("%c ", *(cb->buffer + count));
+                LOG_1((cb->buffer + count),1," ",1);
             else
-                printf("  ");
+                LOG_0("  ",2);
         }
         else {
             if ( cb->num_items == 0 ) {;}
             else if ( ((cb->buffer + count) >= (cb->head)) && ((cb->buffer + count) <= (cb->tail)) )
-                printf("%c ", *(cb->buffer + count));
+                LOG_1((cb->buffer + count),1," ",1);
             else
-                printf("  ");
+                LOG_0("  ",2);
         }
         count++;
     }
-    printf("\n");
+    LOG_0("\n",1);
     return 0;
 }
 
