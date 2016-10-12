@@ -15,6 +15,7 @@
 #include "data.h"
 #include "memory.h"
 #include "circbuf.h"
+#include "timer.h"
 #ifdef FRDM
 #include "uart.h"
 #include "RGB.h"
@@ -290,8 +291,8 @@ void project_2_report()
         }
         set_PWM_RGB(duty, color);
     	uart_rx_data(msg, 1);
-    	uart_tx_data(msg, 1);
     }
+
 #endif
 }
 

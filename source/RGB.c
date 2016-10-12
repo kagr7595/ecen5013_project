@@ -21,7 +21,7 @@ void RGB_init() {
 	// Clocking enabled to TPM0 and TPM2
 	SIM_SCGC6 |= (SIM_SCGC6_TPM0_MASK | SIM_SCGC6_TPM2_MASK);
 
-	// Source for UART0 is from MCGFLLCLK clock or MCGPLLCLK/2 clock
+	// Source is from MCGFLLCLK clock or MCGPLLCLK/2 clock
 	// This chooses the FLL
 	SIM_SOPT2 |= SIM_SOPT2_TPMSRC(1);
 
@@ -40,7 +40,7 @@ void RGB_init() {
 	TPM2_C0SC = TPM_CnSC_ELSA_MASK | TPM_CnSC_MSB_MASK;
 	TPM2_C1SC = TPM_CnSC_ELSA_MASK | TPM_CnSC_MSB_MASK;
 
-	// Timer Overflow Interrupt Enabled, up counting mode, prescalar divide by 1
+	// up counting mode, prescalar divide by 1
 	TPM0_SC = TPM_SC_CMOD(1);
 	TPM2_SC = TPM_SC_CMOD(1);
 
