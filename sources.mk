@@ -20,6 +20,7 @@ SRCS := \
     project_2.c   \
     circbuf.c   \
     error.c   \
+    log.c   \
     memory.c   \
     data.c   
 
@@ -29,6 +30,7 @@ OBJS := \
     project_2.o   \
     circbuf.o   \
     error.o   \
+    log.o   \
     memory.o   \
     data.o  
 
@@ -37,6 +39,7 @@ HDRS := \
     project_2.h   \
     circbuf.h   \
     error.h   \
+    log.h   \
     memory.h   \
     data.h  
 

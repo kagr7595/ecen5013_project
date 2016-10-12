@@ -32,7 +32,7 @@ VPATH = $(INCSRC) $(INCHDRS)
 
 ARCH ?= host
 LDFLAGS := -O0 -Wl,-Map=project.map
-CFLAGS := -DPROJECT_1 -DPROJECT_2 -DFTOATEST -DCIRCBUFTESTS -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS)
+CFLAGS := -DPROJECT_1 -DPROJECT_2 -DVERBOSE -DFTOATEST -DCIRCBUFTESTS -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS)
 
 ifeq ($(ARCH),bbb)
     CC := arm-linux-gnueabihf-gcc
