@@ -259,11 +259,11 @@ void project_2_report()
 #endif
 
     init_uart();
-    uint8_t msg[4] = "full";
-    uart_tx_data(msg, 4);
+    uint8_t msg[10] = "IT WORKS!!";
+    uart_tx_data(msg, 10);
     while(1) {
-    	uart_rx_data(msg, 4);
-        uart_tx_data(msg, 4);
+    	uart_rx_data(msg, 1);
+        uart_tx_data(msg, 1);
     }
 
 }

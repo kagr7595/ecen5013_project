@@ -66,8 +66,8 @@ int8_t remove_buffer_item(volatile CircBuf_t *cb, uint8_t *item) {
     else {
         cb->head = cb->head + 1;
     }
-    cb->num_items--;
-    if( buffer_empty(cb) == EMPTY ) {
+    //cb->num_items--;
+    if( cb->num_items == 1 ) {
         if( cb->tail == (cb->buffer + cb->size - 1) ) {
             cb->tail = cb->buffer;
         }
@@ -75,6 +75,7 @@ int8_t remove_buffer_item(volatile CircBuf_t *cb, uint8_t *item) {
             cb->tail = cb->tail+1;
         }
     }
+    cb->num_items--;
     return 0;
 }
 

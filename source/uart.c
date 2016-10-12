@@ -18,17 +18,20 @@ volatile CircBuf_t * rx_buf;
 void uart_rx_data(uint8_t *read, uint8_t length) {
 	uint8_t item;
 	uint8_t * item_ptr = &item;
+	uint8_t i = 0;
 	// Wait until RX buffer has a sufficient number of items
     while(rx_buf->num_items < length) {1;}
 
-    while(length > 0) {
+    while(i < length) {
         // Get character from RX buffer
+    	__disable_irq();
         remove_buffer_item(rx_buf, item_ptr);
+        __enable_irq();
         // Write character to read array
-        *(read + length) = item;
+        *(read + i) = item;
         // Turn RX interrupt on
         UART0_C2 |= UART_C2_RIE_MASK;
-        length--;
+        i++;
     }
 }
 
@@ -47,7 +50,9 @@ extern void UART0_IRQHandler() {
 
 	// If the receive register is full and there is room in the RX buffer, read a character
 	if ((status & UART_S1_RDRF_MASK) && (!buffer_full(rx_buf))) {
+		__disable_irq();
 		add_buffer_item(rx_buf, UART0_D);
+		__enable_irq();
 		// Only clear interrupt flag for receive if the RX buffer is full
 		if(buffer_full(rx_buf)) {
 			UART0_C2 &= ~UART_C2_RIE_MASK;
