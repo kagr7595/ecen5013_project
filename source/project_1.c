@@ -10,6 +10,11 @@
 #ifndef _PROJECT_1_C
 #define _PROJECT_1_C
 
+#include <stdint.h>
+#include <stdio.h>
+#include "error.h"
+#include "data.h"
+#include "memory.h"
 #include "project_1.h"
 
 #ifdef FRDM

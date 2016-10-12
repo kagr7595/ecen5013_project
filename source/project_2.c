@@ -11,6 +11,15 @@
 #ifndef _PROJECT_2_C
 #define _PROJECT_2_C
 
+#include "error.h"
+#include "data.h"
+#include "memory.h"
+#include "circbuf.h"
+#ifdef FRDM
+#include "uart.h"
+#else
+#include "error.h"
+#endif
 #include "project_2.h"
 
 
@@ -254,10 +263,10 @@ void project_2_report()
         printf("FAIL (%d/9 PASS)\n", pass_cnt);
     }
 
-    return 0;
 
 #endif
 
+#ifdef FRDM
     init_uart();
     uint8_t msg[10] = "IT WORKS!!";
     uart_tx_data(msg, 10);
@@ -265,7 +274,7 @@ void project_2_report()
     	uart_rx_data(msg, 1);
         uart_tx_data(msg, 1);
     }
-
+#endif
 }
 
 #endif 

@@ -7,8 +7,8 @@
 *               Dylan Way
 *       
 ****************************************************************************/
-
-#include "error.h"
+#include <stdint.h>
+#include <stdio.h>
 
 void return_code_error(int8_t return_code, uint8_t function_name)
 {

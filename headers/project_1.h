@@ -10,10 +10,6 @@
 #ifndef _PROJECT_1_H
 #define _PROJECT_1_H
 
-#include "data.h"
-#include "memory.h"
-#include "error.h"
-
 /* Defines section
  * Add all #defines here
  ***************************************************************************/

@@ -17,17 +17,26 @@ VPATH = $(INCSRC) $(INCHDRS)
 SRCS := \
     main.c   \
     project_1.c   \
+    project_2.c   \
+    circbuf.c   \
+    error.c   \
     memory.c   \
-    data.c
+    data.c   
 
 OBJS := \
     main.o   \
     project_1.o   \
+    project_2.o   \
+    circbuf.o   \
+    error.o   \
     memory.o   \
-    data.o
+    data.o  
 
 HDRS := \
     project_1.h   \
+    project_2.h   \
+    circbuf.h   \
+    error.h   \
     memory.h   \
-    data.h
+    data.h  
 

@@ -10,9 +10,9 @@
 #ifndef _MEMORY_H
 #define _MEMORY_H
 
-#include <stdio.h>
 #include <stdint.h>
-//#include "error.c"
+#include <stdio.h>
+#include "error.h"
 
 #ifdef FRDM
 #pragma GCC poison printf

@@ -10,6 +10,8 @@
 #ifndef _MEMORY_C
 #define _MEMORY_C
 
+#include <stdint.h>
+#include <stdio.h>
 #include "memory.h"
 
 // Take two pointers (one source and one destination) and a length of bytes

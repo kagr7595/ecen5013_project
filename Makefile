@@ -32,7 +32,7 @@ VPATH = $(INCSRC) $(INCHDRS)
 
 ARCH ?= host
 LDFLAGS := -O0 -Wl,-Map=project.map
-CFLAGS := -DPROJECT_2 -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS)
+CFLAGS := -DPROJECT_1 -DPROJECT_2 -DFTOATEST -DCIRCBUFTESTS -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS)
 
 ifeq ($(ARCH),bbb)
     CC := arm-linux-gnueabihf-gcc
@@ -72,7 +72,7 @@ compile-all: $(SRCS)
 .PHONY: build
 # Compiles all object files and links
 build:  clean $(OBJS) depend
-	$(CC) $(LDFLAGS) -o project main.o
+	$(CC) $(LDFLAGS) -o project $(OBJS)
 	size project
 
 .PHONY: upload

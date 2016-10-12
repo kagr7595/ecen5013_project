@@ -10,6 +10,10 @@
 #ifndef _DATA_C
 #define _DATA_C
 
+#include <stdint.h>
+#include <stdio.h>
+#include "memory.h"
+#include "error.h"
 #include "data.h"
 
 // Performs division on the uint128 variable type and returns the remainder

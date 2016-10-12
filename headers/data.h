@@ -13,6 +13,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "memory.h"
+#include "error.h"
 
 #ifdef FRDM
 #pragma GCC poison printf
@@ -73,5 +74,8 @@ void my_itoa_out(uint8_t * string, int32_t data, int32_t base);
 
 // Convert data from a standard float type into an asci string
 int8_t my_ftoa(uint8_t * str, float data);
+
+// Prints output for my_ftoa function
+void my_ftoa_out(uint8_t * string, float data);
 
 #endif
