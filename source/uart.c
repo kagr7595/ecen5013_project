@@ -24,9 +24,9 @@ void uart_rx_data(uint8_t *read, uint8_t length) {
 
     while(i < length) {
         // Get character from RX buffer
-    	__disable_irq();
+    	NVIC_DisableIRQ(UART0_IRQn);
         remove_buffer_item(rx_buf, item_ptr);
-        __enable_irq();
+        NVIC_EnableIRQ(UART0_IRQn);
         // Write character to read array
         *(read + i) = item;
         // Turn RX interrupt on
@@ -50,9 +50,9 @@ extern void UART0_IRQHandler() {
 
 	// If the receive register is full and there is room in the RX buffer, read a character
 	if ((status & UART_S1_RDRF_MASK) && (!buffer_full(rx_buf))) {
-		__disable_irq();
+		NVIC_DisableIRQ(UART0_IRQn);
 		add_buffer_item(rx_buf, UART0_D);
-		__enable_irq();
+		NVIC_EnableIRQ(UART0_IRQn);
 		// Only clear interrupt flag for receive if the RX buffer is full
 		if(buffer_full(rx_buf)) {
 			UART0_C2 &= ~UART_C2_RIE_MASK;
