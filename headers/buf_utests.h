@@ -10,5 +10,6 @@
 #ifndef _BUF_UTESTS_H
 #define _BUF_UTESTS_H
 
+uint8_t buffer_unit_tests(void);
 
 #endif

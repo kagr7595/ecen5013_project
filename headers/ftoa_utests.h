@@ -10,6 +10,8 @@
 #ifndef _FTOA_UTESTS_H
 #define _FTOA_UTESTS_H
 
+#define ARRAY_LENGTH_70 70
 
+void ftoa_unit_tests(void);
 
 #endif
