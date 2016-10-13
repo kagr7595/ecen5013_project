@@ -31,15 +31,145 @@ void LOG_0(uint8_t * data, uint8_t len)
 
 //Logging a string with specific length of characters and appending a parameter
 //void LOG_1(<type> * data, <type> len, <type> * param, <type> data_type_size)
-void LOG_1(uint8_t * data, uint8_t len, uint8_t * intfl,  uint8_t intfl_len)
+void LOG_1(uint8_t * data, uint8_t len, uint64_t i_data,  uint8_t data_type)
 {
-	LOG_0(data,len);
-	LOG_0(intfl,intfl_len);
-	LOG_0("\n ",1);
+    uint8_t return_code  = 0;
+    uint8_t str[100];
+    uint16_t num_elements = 0;
+    uint64_t temp; 
+    int8_t i8;
+    int16_t i16;
+    int32_t i32;
+    int64_t i64;
+
+    LOG_0(data,len);
+    
+    if(str == NULL) {return_code= 1;}   
+    return_code_error(return_code, LOG1_F);
+    
+    switch(data_type)
+    {
+    case I8:
+	i8 = (int8_t) i_data;
+	// if data is a negative number
+	if(i8 < 0)
+	{
+	    temp = (uint64_t)(~i8+1);
+	} else
+	{
+	    temp = (uint64_t)i8;
+	}
+	
+	break;
+    case I16:
+	i16 = (int16_t) i_data;
+	// if data is a negative number
+	if(i16 < 0)
+	{
+	    temp = (uint64_t)(~i16+1);
+	} else
+	{
+	    temp = (uint64_t)i16;
+	}
+	break;
+	
+    case I32:
+	i32 = (int32_t) i_data;
+	// if data is a negative number
+	if(i32 < 0)
+	{
+	    temp = (uint64_t)(~i32+1);
+	} else
+	{
+	    temp = (uint64_t)i32;
+	}
+	break;
+    case I64:
+	i64 = (int64_t) i_data;
+	// if data is a negative number
+	if(i64 < 0)
+	{
+	    temp = (uint64_t)(~i64+1);
+	} else
+	{
+	    temp = (uint64_t)i64;
+	}
+	break;
+    default:
+	break;
+	
+    }
+    uint8_t base = 10;
+    
+    // if data is a negative number
+    if(i_data < 0)
+    {
+	temp = ~i_data+1;
+    } else
+    {
+	temp = i_data;
+    }
+    
+    //switch from numbers to ascii characters
+    for (num_elements = 0; temp != 0; num_elements++)
+    {
+	//assign remainder into the str pointer
+	if(temp%base < 10)
+	{
+	    *(str + num_elements) = temp%base + '0';
+	} 
+	temp = temp/base;
+    }
+    
+    // if i_data is negative, change the largest bit (sign bit) in str to 1
+    if (i_data < 0)
+    {
+	*(str+num_elements) = '-';  
+	num_elements++;
+    }
+    
+    //reverse array of remainders to get ascii string of i_data without sign
+    return_code = my_reverse(str, num_elements);
+    if(return_code != 0){return_code= 3;}
+    
+    LOG_0(str,num_elements);
 }
 
 
+//Logging a string with specific length of characters and appending a parameter
+//void LOG_2(<type> * data, <type> len, <type> * param, <type> data_type_size)
+void LOG_2(uint8_t * data, uint8_t len, float f_data,  uint8_t data_type)
+{
+    uint8_t return_code  = 0;
+    uint8_t str[100];
+    uint16_t num_elements = 0;
 
+    LOG_0(data,len);
+    
+    if(str == NULL) {return_code= 1;}   
+    return_code_error(return_code, LOG2_F);
+    if(data_type == FL32)
+    {
+	return_code = my_ftoa(str,f_data);
+	return_code_error(return_code, MY_FTOA);
+	num_elements = count2null(str);
+    } 
+    LOG_0(str,num_elements);
+}
+
+
+// Creates a new logger repeatable character (as many as num_character). 
+// Up to 256 of the same character (useful for spacing and newlines)
+void my_newcharacter(uint8_t character, uint8_t num_character)
+{
+    uint8_t print [256] = "";
+    uint8_t i;
+    for(i = 0;i < num_character;i++)
+    {
+	*(print+i) = character;
+    }
+    LOG_0(print,i+1);
+}
 
 #endif
 

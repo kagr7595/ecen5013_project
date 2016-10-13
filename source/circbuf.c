@@ -84,25 +84,30 @@ int8_t remove_buffer_item(volatile CircBuf_t *cb, uint8_t *item) {
 int8_t print_buffer(volatile CircBuf_t *cb) {
     uint8_t count = 0;
 
-    LOG_0("  Buffer: ",10);
+    uint8_t print0 [256] = "  Buffer: ";
+    LOG_0(print0,count2null(print0));
     while( count < cb->size ) {
         if ( cb->head > cb-> tail) {
             if ( cb->num_items == 0 ) {;}
             else if ( ((cb->buffer + count) >= (cb->head)) || ((cb->buffer + count) <= (cb->tail)) )
-                LOG_1((cb->buffer + count),1," ",1);
-            else
-                LOG_0("  ",2);
+	    {
+                LOG_1(0,0,(uint64_t)(cb->buffer + count),UI8);
+		my_newcharacter(' ',1);  
+	    } else
+		my_newcharacter(' ',2);  
         }
         else {
             if ( cb->num_items == 0 ) {;}
             else if ( ((cb->buffer + count) >= (cb->head)) && ((cb->buffer + count) <= (cb->tail)) )
-                LOG_1((cb->buffer + count),1," ",1);
-            else
-                LOG_0("  ",2);
+	    {
+                LOG_1(0,0,(uint64_t)(cb->buffer + count),UI8);
+		my_newcharacter(' ',1);  
+	    } else
+		my_newcharacter(' ',2);  
         }
         count++;
     }
-    LOG_0("\n",1);
+    my_newcharacter('\n',1);  
     return 0;
 }
 

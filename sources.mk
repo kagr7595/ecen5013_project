@@ -20,6 +20,8 @@ SRCS := \
     project_2.c   \
     circbuf.c   \
     error.c   \
+    ftoa_utests.c   \
+    buf_utests.c   \
     log.c   \
     memory.c   \
     data.c   
@@ -30,6 +32,8 @@ OBJS := \
     project_2.o   \
     circbuf.o   \
     error.o   \
+    ftoa_utests.o   \
+    buf_utests.o   \
     log.o   \
     memory.o   \
     data.o  
@@ -39,6 +43,8 @@ HDRS := \
     project_2.h   \
     circbuf.h   \
     error.h   \
+    ftoa_utests.h   \
+    buf_utests.h   \
     log.h   \
     memory.h   \
     data.h  

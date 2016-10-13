@@ -23,11 +23,13 @@ uint8_t buffer_unit_tests() {
     CircBuf_t *myCB = buffer_init(5);
     uint8_t CB_size = sizeof(myCB);
     if( (myCB != NULL) && (CB_size == 8) ) {
-        printf("CB UNIT TEST: 1/9 <Circular Buffer Init>.....................PASS\n");
+        uint8_t print0[256] = "\nCB UNIT TEST: 1/9 <Circular Buffer Init>.....................PASS\0";
+	LOG_0(print0,count2null(print0));
         pass_cnt++;
     }
     else {
-        printf("CB UNIT TEST: 1/9 <Circular Buffer Init>.....................FAIL\n	CB_size = %d\n", CB_size);
+        uint8_t print1[256] = "\nCB UNIT TEST: 1/9 <Circular Buffer Init>.....................FAIL\n	CB_size = \0";
+	LOG_1(print1,count2null(print1),CB_size,UI8);
         print_buffer(myCB);
     }
 
@@ -41,14 +43,17 @@ uint8_t buffer_unit_tests() {
     add_buffer_item(myCB, '5');
     if( buffer_full(myCB) != FULL ) {error = 2;}
     if( error == 1 ) {
-        printf("CB UNIT TEST: 2/9 <Circular Buffer Full>.....................FAIL\n  Buffer falsely identified as full\n");
+        uint8_t print2[256] = "\nCB UNIT TEST: 2/9 <Circular Buffer Full>.....................FAIL\n  Buffer falsely identified as full\0";
+	LOG_0(print2,count2null(print2));
     }
     else if( error == 2 ) {
-        printf("CB UNIT TEST: 2/9 <Circular Buffer Full>.....................FAIL\n  Full buffer not identified\n");
+        uint8_t print3[256] = "\nCB UNIT TEST: 2/9 <Circular Buffer Full>.....................FAIL\n  Full buffer not identified\0";
+	LOG_0(print3,count2null(print3));
         print_buffer(myCB);
     }
     else {
-        printf("CB UNIT TEST: 2/9 <Circular Buffer Full>.....................PASS\n");
+        uint8_t print4[256] = "\nCB UNIT TEST: 2/9 <Circular Buffer Full>.....................PASS\0";
+	LOG_0(print4,count2null(print4));
         pass_cnt++;
     }
 
@@ -61,11 +66,13 @@ uint8_t buffer_unit_tests() {
     remove_buffer_item(myCB, items+4);
 
     if((*items == '1') && ((*(items+1)) == '2') && ((*(items+2)) == '3') && ((*(items+3)) == '4') && ((*(items+4)) == '5')) {
-        printf("CB UNIT TEST: 3/9 <Circular Buffer Fill Completely>..........PASS\n");
+        uint8_t print5[256] = "\nCB UNIT TEST: 3/9 <Circular Buffer Fill Completely>..........PASS\0";
+	LOG_0(print5,count2null(print5));
         pass_cnt++;
     }
     else {
-        printf("CB UNIT TEST: 3/9 <Circular Buffer Fill Completely>..........FAIL\n");
+        uint8_t print6[256] = "\nCB UNIT TEST: 3/9 <Circular Buffer Fill Completely>..........FAIL\0";
+	LOG_0(print6,count2null(print6));
         print_buffer(myCB);
     }
 
@@ -77,11 +84,13 @@ uint8_t buffer_unit_tests() {
     add_buffer_item(myCB, '5');
     error = add_buffer_item(myCB, 6);
     if(error == FULL) {
-    	printf("CB UNIT TEST: 4/9 <Circular Buffer Add Item When Full>.......PASS\n");
+    	uint8_t print7[256] = "\nCB UNIT TEST: 4/9 <Circular Buffer Add Item When Full>.......PASS\0";
+	LOG_0(print7,count2null(print7));
         pass_cnt++;
     }
     else {
-        printf("CB UNIT TEST: 4/9 <Circular Buffer Add Item When Full>.......FAIL\n");
+        uint8_t print8[256] = "\nCB UNIT TEST: 4/9 <Circular Buffer Add Item When Full>.......FAIL\0";
+	LOG_0(print8,count2null(print8));
         print_buffer(myCB);
     }
 
@@ -95,11 +104,13 @@ uint8_t buffer_unit_tests() {
     error = add_buffer_item(myCB, '7');
     error2 = add_buffer_item(myCB, '8');
     if( error || error2 || (*(myCB->buffer) != '7') || (*(myCB->buffer + 1) != '8') ) {
-        printf("CB UNIT TEST: 5/9 <Circular Buffer Add Item Wrapping>........FAIL\n");
+        uint8_t print9[256] = "\nCB UNIT TEST: 5/9 <Circular Buffer Add Item Wrapping>........FAIL\0";
+	LOG_0(print9,count2null(print9));
         print_buffer(myCB);
     }
     else {
-        printf("CB UNIT TEST: 5/9 <Circular Buffer Add Item Wrapping>........PASS\n");
+        uint8_t print10[256] = "\nCB UNIT TEST: 5/9 <Circular Buffer Add Item Wrapping>........PASS\0";
+	LOG_0(print10,count2null(print10));
         pass_cnt++;
     }
 
@@ -114,15 +125,18 @@ uint8_t buffer_unit_tests() {
     remove_buffer_item(myCB, item_ptr);
     if( buffer_empty(myCB) != EMPTY ) {error = 2;}
     if( error == 1 ) {
-        printf("CB UNIT TEST: 6/9 <Circular Buffer Empty>....................FAIL\n  Buffer falsely identified as empty\n");
+        uint8_t print11[256] = "\nCB UNIT TEST: 6/9 <Circular Buffer Empty>....................FAIL\n  Buffer falsely identified as empty\0";
+	LOG_0(print11,count2null(print11));
         print_buffer(myCB);
     }
     else if( error == 2 ) {
-        printf("CB UNIT TEST: 6/9 <Circular Buffer Empty>....................FAIL\n  Empty buffer not identified\n");
+        uint8_t print12[256] = "\nCB UNIT TEST: 6/9 <Circular Buffer Empty>....................FAIL\n  Empty buffer not identified\0";
+	LOG_0(print12,count2null(print12));
         print_buffer(myCB);
     }
     else {
-        printf("CB UNIT TEST: 6/9 <Circular Buffer Empty>....................PASS\n");
+        uint8_t print13[256] = "\nCB UNIT TEST: 6/9 <Circular Buffer Empty>....................PASS\0";
+	LOG_0(print13,count2null(print13));
         pass_cnt++;
     }
 
@@ -130,11 +144,13 @@ uint8_t buffer_unit_tests() {
     error = 0;
     error = remove_buffer_item(myCB, item_ptr);
     if( error == EMPTY) {
-        printf("CB UNIT TEST: 7/9 <Circular Buffer Remove Item When Empty>...PASS\n");
+        uint8_t print14[256] = "\nCB UNIT TEST: 7/9 <Circular Buffer Remove Item When Empty>...PASS\0";
+	LOG_0(print14,count2null(print14));
         pass_cnt++;
     }
     else {
-        printf("CB UNIT TEST: 7/9 <Circular Buffer Remove Item When Empty>...FAIL\n");
+        uint8_t print15[256] = "\nCB UNIT TEST: 7/9 <Circular Buffer Remove Item When Empty>...FAIL\0";
+	LOG_0(print15,count2null(print15));
         print_buffer(myCB);
     }
     destroy_buffer(&myCB);
@@ -161,11 +177,13 @@ uint8_t buffer_unit_tests() {
 
     // Now the last items removed should be the last (5) and first items (6)
     if( (item == '5') && (item2 == '6') ) {
-        printf("CB UNIT TEST: 8/9 <Circular Buffer Remove Item Wrapping>.....PASS\n");
+        uint8_t print16[256] = "\nCB UNIT TEST: 8/9 <Circular Buffer Remove Item Wrapping>.....PASS\0";
+	LOG_0(print16,count2null(print16));
         pass_cnt++;
     }
     else {
-        printf("CB UNIT TEST: 8/9 <Circular Buffer Remove Item Wrapping>.....FAIL\n  The remove_buffer_item function did not correctly wrap back to the beginning of the circular buffer and remove the first item\n");
+        uint8_t print17[256] = "\nCB UNIT TEST: 8/9 <Circular Buffer Remove Item Wrapping>.....FAIL\n  The remove_buffer_item function did not correctly wrap back to the beginning of the circular buffer and remove the first item\0";
+	LOG_0(print17,count2null(print17));
         print_buffer(myCB);
     }
     remove_buffer_item(myCB, item_ptr);
@@ -173,24 +191,30 @@ uint8_t buffer_unit_tests() {
     // Destroy should free memory back to malloc
     destroy_buffer(&myCB);
     if( myCB != NULL ) {
-        printf("CB UNIT TEST: 9/9 <Circular Buffer Destroy>..................FAIL\n  myCB = %lu", (uint64_t) myCB);
+        uint8_t print18[256] = "\nCB UNIT TEST: 9/9 <Circular Buffer Destroy>..................FAIL\n  myCB = %lu\0";
+	LOG_1(print18,count2null(print18),(uint64_t) myCB,UI64);
         print_buffer(myCB);
     }
     else {
-        printf("CB UNIT TEST: 9/9 <Circular Buffer Destroy>..................PASS\n");
+        uint8_t print19[256] = "\nCB UNIT TEST: 9/9 <Circular Buffer Destroy>..................PASS\0";
+	LOG_0(print19,count2null(print19));
         pass_cnt++;
     }
 
-    printf("CIRCBUFF UNIT TEST SUITE: ");
+    uint8_t print20[256] = "\nCIRCBUFF UNIT TEST SUITE: \0";
+	LOG_0(print20,count2null(print20));
     if( pass_cnt == 9 ) {
-        printf("PASS\n");
+        uint8_t print21[256] = "PASS\n\0";
+	LOG_0(print21,count2null(print21));
     }
     else {
-        printf("FAIL (%d/9 PASS)\n", pass_cnt);
+        uint8_t print22[256] = "FAIL (%d/9 PASS)\n\0";
+    LOG_1(print22,count2null(print22),(uint64_t)pass_cnt,UI8);
     }
     if (pass_cnt != 9) {
     	return 1;
     }
+    my_newcharacter('\n',1);
     return 0;
 }
 

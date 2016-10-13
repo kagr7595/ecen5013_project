@@ -118,22 +118,8 @@ int8_t my_ftoa(uint8_t * str, float data)
 	fsign = 0;
     } else if ((data > LARGEST_FLOAT_HANDLED_128) || (data < -1*LARGEST_FLOAT_HANDLED_128))
     {
-	if (fsign == 1)
-	{
-	    // large negative number rounds to zero
-#ifndef FRDM
-    	printf("Given data = %0lf",data);
-    	printf("\n   ERROR: Negative float is too small to compute for this ftoa function\n\n");
-#endif
-	    return 2;
-	} else 
-	{
-#ifndef FRDM
-    	printf("Given data = %0lf",data);
-    	printf("\n   ERROR: Float is too large to compute for this ftoa function\n\n");
-#endif
-	    return 3;
-	}
+	if (fsign == 1) { return 2;}
+	else { return 3;}
     } else {
         //For the cases where the integer is really large and struct for uint128 will be used below for ftoa conversion
         //fractional portion won't exist because the exponent is too large for the mantissa to allow for this precision

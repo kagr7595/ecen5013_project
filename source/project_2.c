@@ -48,15 +48,17 @@ void project_2_report()
     uint16_t n2 = 4096;
     uint32_t n3 = 123456;
     float f0 = 1543.321;
-    LOG_0("Testing123, Serial Print Test, no params\n",41);
-    my_itoa(array,(int32_t)n1,10);
-    LOG_1("This is an integer number: ",27,array,count2null(array));
-    my_itoa(array,(int32_t)n2,10);
-    LOG_1("This is an integer number: ",27,array,count2null(array));
-    my_itoa(array,n3,10);
-    LOG_1("This is an integer number: ",27,array,count2null(array));
-    my_ftoa(array,f0);
-    LOG_1("This is a floating point number: ",33,array,count2null(array));
+    uint8_t print_arr0[256] = "\nTesting123, Serial Print Test, no params\0";
+    LOG_0(print_arr0,count2null(print_arr0));
+    uint8_t print_arr1[256] ="\nThis is an integer number: \0";
+    LOG_1(print_arr1,count2null(print_arr1),n1,UI8);
+    uint8_t print_arr2[256] ="\nThis is an integer number: \0";
+    LOG_1(print_arr2,count2null(print_arr2),n2,UI16);
+    uint8_t print_arr3[256] ="\nThis is an integer number: \0";
+    LOG_1(print_arr3,count2null(print_arr3),n3,UI32);
+    uint8_t print_arr4[256] ="\nThis is a floating point number: \0";
+    LOG_2(print_arr4,count2null(print_arr4),f0,FL32);
+    my_newcharacter('\n',2);  
 #endif
 
 
