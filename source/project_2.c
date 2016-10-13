@@ -30,13 +30,12 @@
 
 void project_2_report()
 {
-    int8_t return_code = 0;
 #ifdef FRDM
     init_uart();
 #endif
 
 #ifdef FTOATEST
-    uint8_t ftoa_unit_tests();
+    ftoa_unit_tests();
 #endif
 
 

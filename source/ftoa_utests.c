@@ -10,9 +10,16 @@
 #ifndef _FTOA_UTESTS_C
 #define _FTOA_UTESTS_C
 
+#include <stdint.h>
+#include "log.h"
+#include "data.h"
+
+#define ARRAY_LENGTH_70 70
+
 void ftoa_unit_tests() {
 /* Create unsigned array of 70 bytes */
     uint8_t array[ARRAY_LENGTH_70];
+    int8_t return_code = 0;
     uint8_t ftoa_string[6] = "FTOA: ";
 
     float f1 = -7.5;

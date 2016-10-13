@@ -10,6 +10,10 @@
 #ifndef _BUF_UTESTS_C
 #define _BUF_UTESTS_C
 
+#include <stdint.h>
+#include "circbuf.h"
+#include "log.h"
+
 uint8_t pass_cnt = 0;
     int8_t error = 0;
     int8_t error2 = 0;
