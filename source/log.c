@@ -168,7 +168,7 @@ void my_newcharacter(uint8_t character, uint8_t num_character)
     {
 	*(print+i) = character;
     }
-    LOG_0(print,i+1);
+    LOG_0(print,i);
 }
 
 #endif

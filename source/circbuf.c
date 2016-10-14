@@ -84,7 +84,7 @@ int8_t remove_buffer_item(volatile CircBuf_t *cb, uint8_t *item) {
 int8_t print_buffer(volatile CircBuf_t *cb) {
     uint8_t count = 0;
 
-    uint8_t print0 [256] = "  Buffer: ";
+    uint8_t print0 [256] = "\n  Buffer: ";
     LOG_0(print0,count2null(print0));
     while( count < cb->size ) {
         if ( cb->head > cb-> tail) {
