@@ -11,6 +11,7 @@
 #define _TIMER_C
 
 #include "timer.h"
+#include "circbuf.h"
 
 #define MICRO_CONV 1000000
 #define CLOCK 48000000
@@ -55,7 +56,7 @@ void init_timer() {
 }
 
 // starts the timer over
-uint64_t timer_start() {
+void timer_start() {
 	// Holds the LPTPM counter value, writing to COUNT clears the counter
 	overflow_cnt = 0;
 	TPM1_CNT = 0;

@@ -1,43 +1,32 @@
 /***************************************************************************
 *
-*  	Filename: uart.h
-*	Description: Header file for uart.c
+*  	Filename: timer.h
+*	Description: Header file for timer.c
 *                    
 *       Author: Kathy Grimes 
 *               Dylan Way
 *       
 ****************************************************************************/
-#ifndef _UART_H
-#define _UART_H
+#ifndef _TIMER_H
+#define _TIMER_H
 
-#ifdef FRDM
 #include "MKL25Z4.h"
 #include "core_cm0plus.h"
-//#include "startup_MKL25Z4.S"
-#endif
-#include "circbuf.h"
-
-/* Defines and Structures section
- ***************************************************************************/
-#define BUF_LENGTH 100
-#define OVER_S 16
-#define BAUD 9600
 
 /* Function prototype Section
  * Add protoypes for all functions called by this module, with the exception
  * of runtime routines.
  ***************************************************************************/
+// Initialize the timer
+void init_timer(void);
 
-// UART Receive data to be stored into another pointer for processing
-void uart_rx_data(uint8_t *read, uint8_t length);
+// Converts the count to number of microseconds
+uint64_t count_to_time(uint64_t count);
 
-// UART send data to uart
-void uart_tx_data(uint8_t *send, uint8_t length);
+// Resets the timer value
+void timer_start(void);
 
-// Sets up UART0 registers
-void init_uart(void);
-
-// IRQ handler routine for when a character is received
-//void UART0_IRQHandler(void); //__attribute__((interrupt("IRQ")));
+// Retrieves the timer value
+uint64_t timer_end(void);
 
 #endif
