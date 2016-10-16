@@ -19,6 +19,7 @@
 #include "timer.h"
 #include "ftoa_utests.h"
 #include "buf_utests.h"
+#include "profiler.h"
 
 #ifdef FRDM
 #include "uart.h"
@@ -61,6 +62,7 @@ void project_2_report()
     my_newcharacter('\n',2);  
 #endif
 
+    profiler_tests();
 
 #ifdef FRDM
     RGB_init();
