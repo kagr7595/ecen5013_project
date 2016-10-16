@@ -25,7 +25,7 @@
   111 Divide by 128*/
 
 volatile CircBuf_t * rx_buf;
-uint32_t overflow_cnt;
+uint64_t overflow_cnt;
 
 // Initialize the timer
 void init_timer() {
@@ -55,21 +55,21 @@ void init_timer() {
 }
 
 // starts the timer over
-uint32_t timer_start() {
+uint64_t timer_start() {
 	// Holds the LPTPM counter value, writing to COUNT clears the counter
 	overflow_cnt = 0;
 	TPM1_CNT = 0;
 }
 
 // Converts the count pulled from the timer to a time value in terms of microseconds
-uint32_t count_to_time(uint32_t count) {
+uint64_t count_to_time(uint64_t count) {
 	return (count*MICRO_CONV)/(CLOCK/PRESCALAR);
 }
 
 // returns the ending time
-uint32_t timer_end() {
+uint64_t timer_end() {
 	// Holds the LPTPM counter value, writing to COUNT clears the counter
-	return count_to_time((0x0000FFFF * overflow_cnt) + TPM1_CNT);
+	return ((0x0000FFFF * overflow_cnt) + TPM1_CNT);
 }
 
 extern void TPM1_IRQHandler() {

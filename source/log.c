@@ -121,6 +121,11 @@ void LOG_1(uint8_t * data, uint8_t len, uint64_t i_data,  uint8_t data_type)
 	temp = temp/base;
     }
     
+    if(num_elements == 0){
+    	*(str) = '0';
+    	num_elements++;
+    }
+
     // if i_data is negative, change the largest bit (sign bit) in str to 1
     if (i_data < 0)
     {
