@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #endif
 
+#ifndef FRDM
 // Returns the difference in time in clock ticks
 uint64_t return_time_dif(struct timeval start, struct timeval end) {
 	uint64_t secs = end.tv_sec - start.tv_sec;
@@ -38,6 +39,7 @@ uint64_t return_time_dif(struct timeval start, struct timeval end) {
 	}
 	return (usecs + (secs*1000000));
 }
+#endif
 
 void my_memmove_profiler(uint32_t size) {
 	uint8_t src[size];
@@ -188,7 +190,7 @@ void my_itoa_profiler() {
 	uint64_t time = return_time_dif(start, end);
 	uint64_t cycles = (time*1000);
 #endif
-	uint8_t msg1[50] = "\nmy_itoa runtime (\0";
+	uint8_t msg1[50] = "\nmy_itoa runtime \0";
 	uint8_t msg2[10] = " cycles, \0";
 	uint8_t msg3[10] = " us \0";
 	LOG_1(msg1, count2null(msg1),cycles,UI64);
@@ -213,7 +215,7 @@ void my_ftoa_profiler() {
 	uint64_t time = return_time_dif(start, end);
 	uint64_t cycles = (time*1000);
 #endif
-	uint8_t msg1[50] = "\nmy_ftoa runtime (\0";
+	uint8_t msg1[50] = "\nmy_ftoa runtime \0";
 	uint8_t msg2[10] = " cycles, \0";
 	uint8_t msg3[10] = " us \0";
 	LOG_1(msg1, count2null(msg1),cycles,UI64);
@@ -237,7 +239,7 @@ void my_atoi_profiler() {
 	uint64_t time = return_time_dif(start, end);
 	uint64_t cycles = (time*1000);
 #endif
-	uint8_t msg1[50] = "\nmy_atoi runtime (\0";
+	uint8_t msg1[50] = "\nmy_atoi runtime \0";
 	uint8_t msg2[10] = " cycles, \0";
 	uint8_t msg3[10] = " us \0";
 	LOG_1(msg1, count2null(msg1),cycles,UI64);
@@ -245,7 +247,7 @@ void my_atoi_profiler() {
 	LOG_0(msg3, count2null(msg3));
 }
 
-
+#ifndef FRDM
 void atoi_profiler() {
 	const char str[6] = "123456";
 	struct timeval start;
@@ -262,6 +264,7 @@ void atoi_profiler() {
 	LOG_1(msg2, count2null(msg2),time,UI64);
 	LOG_0(msg3, count2null(msg3));
 }
+#endif
 
 void malloc_empty_profiler(uint32_t size) {
 	uint8_t *ptr;
@@ -416,6 +419,7 @@ void log_profiler() {
 	LOG_0(msg3, count2null(msg3));
 }
 
+#ifndef FRDM
 void print_profiler(uint8_t option) {	
 	// runs profiler on print statements	
 	int32_t val1 = 1234;
@@ -451,13 +455,14 @@ void print_profiler(uint8_t option) {
 	gettimeofday(&end, NULL);
 	uint64_t time = return_time_dif(start, end);
 	uint64_t cycles = (time*1000);
-	uint8_t msg1[50] = "\nremove circular buffer runtime: \0";
+	uint8_t msg1[50] = "\nprintf runtime: \0";
 	uint8_t msg2[10] = " cycles, \0";
 	uint8_t msg3[10] = " us \0";
 	LOG_1(msg1, count2null(msg1),cycles,UI64);
 	LOG_1(msg2, count2null(msg2),time,UI64);
 	LOG_0(msg3, count2null(msg3));
 }
+#endif
 
 void profiler_tests() {
 #ifdef FRDM

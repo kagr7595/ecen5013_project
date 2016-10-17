@@ -107,15 +107,15 @@ void project_2_report()
     uint16_t n2 = 4096;
     uint32_t n3 = 123456;
     float f0 = 1543.321;
-    uint8_t print_arr0[256] = "\nTesting123, Serial Print Test, no params\0";
+    uint8_t print_arr0[42] = "\nTesting123, Serial Print Test, no params\0";
     LOG_0(print_arr0,count2null(print_arr0));
-    uint8_t print_arr1[256] ="\nThis is an integer number: \0";
+    uint8_t print_arr1[29] ="\nThis is an integer number: \0";
     LOG_1(print_arr1,count2null(print_arr1),n1,UI8);
-    uint8_t print_arr2[256] ="\nThis is an integer number: \0";
+    uint8_t print_arr2[29] ="\nThis is an integer number: \0";
     LOG_1(print_arr2,count2null(print_arr2),n2,UI16);
-    uint8_t print_arr3[256] ="\nThis is an integer number: \0";
+    uint8_t print_arr3[29] ="\nThis is an integer number: \0";
     LOG_1(print_arr3,count2null(print_arr3),n3,UI32);
-    uint8_t print_arr4[256] ="\nThis is a floating point number: \0";
+    uint8_t print_arr4[35] ="\nThis is a floating point number: \0";
     LOG_2(print_arr4,count2null(print_arr4),f0,FL32);
     my_newcharacter('\n',2);  
 #endif
@@ -128,7 +128,6 @@ void project_2_report()
     uint8_t duty = 100;
     uint8_t msg[1];
     uart_rx_data(msg, 1);
-    uart_tx_data(msg, 1);
     while(*msg != 'q') {
         if ((*msg == 'a') && (color > 0)) {
             color--;
@@ -144,6 +143,19 @@ void project_2_report()
         }
         set_PWM_RGB(duty, color);
     	uart_rx_data(msg, 1);
+    }
+
+    uint8_t str[100];
+    uint8_t index = 0;
+    while(1) {
+    	index = 0;
+    	while(*msg != '\n') {
+    		uart_rx_data(msg, 1);
+    		*(str+index) = *msg;
+    		index++;
+    	}
+    	uart_tx_data(str, index);
+    	*msg = 1;
     }
 
 #endif
