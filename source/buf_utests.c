@@ -200,7 +200,7 @@ uint8_t buffer_unit_tests() {
     destroy_buffer(&myCB);
     if( myCB != NULL ) {
         uint8_t print18[256] = "\nCB UNIT TEST: 9/9 <Circular Buffer Destroy>..................FAIL\n  myCB = %lu\0";
-	LOG_1(print18,count2null(print18),(uint64_t) myCB,UI64);
+	LOG_1(print18,count2null(print18),(uint32_t) myCB,UI32);
         print_buffer(myCB);
     }
     else {
