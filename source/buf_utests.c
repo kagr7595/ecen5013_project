@@ -21,12 +21,20 @@ uint8_t pass_cnt = 0;
 uint8_t buffer_unit_tests() {
     // Initialize should return a valid pointer of heap when heap is available and should error if allocation is bigger than expected
     CircBuf_t *myCB = buffer_init(5);
-    uint8_t CB_size = sizeof(myCB);
-    if( (myCB != NULL) && (CB_size == 8) ) {
+    uint8_t CB_size = sizeof(*myCB);
+#ifdef FRDM
+    if( (myCB != NULL) && (CB_size == 20) ) {
         uint8_t print0[256] = "\nCB UNIT TEST: 1/9 <Circular Buffer Init>.....................PASS\0";
         LOG_0(print0,count2null(print0));
         pass_cnt++;
     }
+#else
+    if( (myCB != NULL) && ((CB_size == 20) || (CB_size == 32)) ) {
+        uint8_t print0[256] = "\nCB UNIT TEST: 1/9 <Circular Buffer Init>.....................PASS\0";
+        LOG_0(print0,count2null(print0));
+        pass_cnt++;
+    }
+#endif
     else {
         uint8_t print1[256] = "\nCB UNIT TEST: 1/9 <Circular Buffer Init>.....................FAIL\n	CB_size = \0";
         LOG_1(print1,count2null(print1),CB_size,UI8);

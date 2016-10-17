@@ -24,7 +24,9 @@ SRCS := \
     buf_utests.c   \
     log.c   \
     memory.c   \
-    data.c   
+    data.c  \
+    profiler.c  \
+    timer.c 
 
 OBJS := \
     main.o   \
@@ -36,7 +38,9 @@ OBJS := \
     buf_utests.o   \
     log.o   \
     memory.o   \
-    data.o  
+    data.o  \
+    profiler.o  \
+    timer.o
 
 HDRS := \
     project_1.h   \
@@ -47,5 +51,7 @@ HDRS := \
     buf_utests.h   \
     log.h   \
     memory.h   \
-    data.h  
+    data.h  \
+    profiler.h  \
+    timer.h
 

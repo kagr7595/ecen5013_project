@@ -10,6 +10,7 @@
 #ifndef _TIMER_C
 #define _TIMER_C
 
+#include <stdint.h>
 #include "timer.h"
 #include "circbuf.h"
 
@@ -30,6 +31,7 @@ uint64_t overflow_cnt;
 
 // Initialize the timer
 void init_timer() {
+#ifdef FRDM
 	// Initialize overflow count
 	overflow_cnt = 0;
 
@@ -53,13 +55,16 @@ void init_timer() {
     NVIC_EnableIRQ(TPM1_IRQn);
 
     __enable_irq();
+#endif
 }
 
 // starts the timer over
 void timer_start() {
+#ifdef FRDM
 	// Holds the LPTPM counter value, writing to COUNT clears the counter
 	overflow_cnt = 0;
 	TPM1_CNT = 0;
+#endif
 }
 
 // Converts the count pulled from the timer to a time value in terms of microseconds
@@ -69,10 +74,15 @@ uint64_t count_to_time(uint64_t count) {
 
 // returns the ending time
 uint64_t timer_end() {
+#ifdef FRDM
 	// Holds the LPTPM counter value, writing to COUNT clears the counter
 	return ((0x0000FFFF * overflow_cnt) + TPM1_CNT);
+#else
+	return 0;
+#endif
 }
 
+#ifdef FRDM
 extern void TPM1_IRQHandler() {
     // Checks the Timer Overflow Flag, 1 indicates counter has overflowed
 	if (TPM1_STATUS & TPM_STATUS_TOF_MASK) {
@@ -81,5 +91,6 @@ extern void TPM1_IRQHandler() {
 		TPM1_SC |= TPM_SC_TOF_MASK;
 	}
 }
+#endif
 
 #endif
