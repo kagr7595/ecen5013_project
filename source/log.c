@@ -47,6 +47,7 @@ void LOG_1(uint8_t * data, uint8_t len, uint64_t i_data,  uint8_t data_type)
     if(str == NULL) {return_code= 1;}   
     return_code_error(return_code, LOG1_F);
     
+    temp = i_data;
     switch(data_type)
     {
     case I8:
@@ -101,15 +102,6 @@ void LOG_1(uint8_t * data, uint8_t len, uint64_t i_data,  uint8_t data_type)
     }
     uint8_t base = 10;
     
-    // if data is a negative number
-    if(i_data < 0)
-    {
-	temp = ~i_data+1;
-    } else
-    {
-	temp = i_data;
-    }
-    
     //switch from numbers to ascii characters
     for (num_elements = 0; temp != 0; num_elements++)
     {
@@ -127,7 +119,7 @@ void LOG_1(uint8_t * data, uint8_t len, uint64_t i_data,  uint8_t data_type)
     }
 
     // if i_data is negative, change the largest bit (sign bit) in str to 1
-    if (i_data < 0)
+    if (i32 < 0 || i64 < 0 || i16 < 0 || i8 < 0)
     {
 	*(str+num_elements) = '-';  
 	num_elements++;

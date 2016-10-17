@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include "memory.h"
 #include "error.h"
+#include "log.h"
 #include "data.h"
 
 // Performs division on the uint128 variable type and returns the remainder
@@ -341,16 +342,21 @@ void my_ftoa_out(uint8_t * string, float data)
 
 void my_itoa_out(uint8_t * string, int32_t data, int32_t base)
 {    
-#ifndef FRDM
-    uint8_t i;
 
-    printf("Given data: %d, base: %d\nASCII str:",data,base);
-    for (i = 0; *(string+i)!='\0'; i++)
-    {
-        printf("%c",*(string+i));
-    }                       
-    printf("\n\n");
-#endif
+    uint8_t i;
+    uint8_t print_string[255] = "ITOA: Given data: \0";
+    uint8_t print_string_base[255] = "base: \0";
+    uint8_t print_string_ascii[255] = "ASCII str: \0";
+    LOG_1(print_string, count2null(print_string), data, I32);
+    my_newcharacter(' ',1);  
+    
+    LOG_1(print_string_base, count2null(print_string_base), base, I32);
+    my_newcharacter(' ',1);  
+    
+    LOG_0(print_string_ascii,count2null(print_string_ascii));
+    LOG_0(string,count2null(string));
+    my_newcharacter('\n',1);  
+
 }
 
 uint8_t count2null(uint8_t * string)
