@@ -37,6 +37,7 @@ void project_2_report()
 
 #ifdef FTOATEST
     ftoa_unit_tests();
+    my_newcharacter('\n',1);  
 #endif
 
     /* Create unsigned array of 32 bytes */
@@ -71,6 +72,7 @@ void project_2_report()
     int8_t convert_itoa6 = my_itoa(array,int_convert,8);
     my_itoa_out(array,int_convert,8);
     return_code_error(convert_itoa6, MY_ITOA);
+    my_newcharacter('\n',1);  
 
 
 
@@ -96,7 +98,7 @@ void project_2_report()
     LOG_1(print_atoi3, count2null(print_atoi3), test_atoi3, I32);
     my_newcharacter('\n',1);  
     LOG_1(print_atoi4, count2null(print_atoi4), test_atoi4, I32);
-    my_newcharacter('\n',1);  
+    my_newcharacter('\n',2);  
 
 #ifdef CIRCBUFTESTS
     buffer_unit_tests();
@@ -121,6 +123,7 @@ void project_2_report()
 #endif
 
     profiler_tests();
+    my_newcharacter('\n',2);  
 
 #ifdef FRDM
     RGB_init();

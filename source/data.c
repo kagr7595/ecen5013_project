@@ -343,7 +343,6 @@ void my_ftoa_out(uint8_t * string, float data)
 void my_itoa_out(uint8_t * string, int32_t data, int32_t base)
 {    
 
-    uint8_t i;
     uint8_t print_string[255] = "ITOA: Given data: \0";
     uint8_t print_string_base[255] = "base: \0";
     uint8_t print_string_ascii[255] = "ASCII str: \0";
