@@ -455,7 +455,7 @@ void print_profiler(uint8_t option) {
 	gettimeofday(&end, NULL);
 	uint64_t time = return_time_dif(start, end);
 	uint64_t cycles = (time*1000);
-	uint8_t msg1[50] = "\nremove circular buffer runtime: \0";
+	uint8_t msg1[50] = "\nprintf runtime: \0";
 	uint8_t msg2[10] = " cycles, \0";
 	uint8_t msg3[10] = " us \0";
 	LOG_1(msg1, count2null(msg1),cycles,UI64);
