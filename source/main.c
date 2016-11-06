@@ -16,6 +16,9 @@
 #include "project_2.h"
 #endif
 
+#ifdef PROJECT_3
+#include "project_3.h"
+#endif
 
 int main()
 {
