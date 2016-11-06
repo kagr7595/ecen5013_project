@@ -18,6 +18,7 @@ SRCS := \
     main.c   \
     project_1.c   \
     project_2.c   \
+    project_3.c   \
     circbuf.c   \
     error.c   \
     ftoa_utests.c   \
@@ -26,12 +27,15 @@ SRCS := \
     memory.c   \
     data.c  \
     profiler.c  \
-    timer.c 
+    timer.c    \
+    command.c   \
+    LED_control.c
 
 OBJS := \
     main.o   \
     project_1.o   \
     project_2.o   \
+    project_3.o   \
     circbuf.o   \
     error.o   \
     ftoa_utests.o   \
@@ -40,11 +44,14 @@ OBJS := \
     memory.o   \
     data.o  \
     profiler.o  \
-    timer.o
+    timer.o    \
+    command.o    \
+    LED_control.o
 
 HDRS := \
     project_1.h   \
     project_2.h   \
+    project_3.h   \
     circbuf.h   \
     error.h   \
     ftoa_utests.h   \
@@ -53,5 +60,7 @@ HDRS := \
     memory.h   \
     data.h  \
     profiler.h  \
-    timer.h
+    timer.h    \
+    command.h    \
+    LED_control.h
 

@@ -19,6 +19,7 @@
 #include "timer.h"
 #include "profiler.h"
 #include "command.h"
+#include "LED_control.h"
 
 #ifdef FRDM
 #include "uart.h"
@@ -81,12 +82,15 @@ void project_3_report()
     create_cmd(&cmd2, SET_COLOR, 1, data);
     send_cmd(&cmd2);
 #endif
-
     CI_Msg cmd;
     uint8_t error;
     error = receive_cmd(&cmd);
     run_cmd(&cmd);
-
+#else
+    printf("\nAbout to set brightness\n");
+    set_brightness(50);
+    printf("\nAbout to set color\n");
+    set_color(BLUE);
 #endif
 }
 #endif

@@ -10,9 +10,12 @@
 #ifndef _RGB_H
 #define _RGB_H
 
+#ifdef FRDM
 #include "MKL25Z4.h"
 #include "core_cm0plus.h"
-//#include "startup_MKL25Z4.S"
+#endif
+
+#include <stdint.h>
 
 /* Defines and Structures section
  ***************************************************************************/

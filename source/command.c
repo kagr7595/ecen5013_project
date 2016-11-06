@@ -20,8 +20,8 @@ void send_data(uint8_t *send, uint8_t length){
 		uart_tx_data(send, length);
 	#else
 		uint8_t i = 0;
-		for(i = 0; i < legth; i++){
-			printf("%d",*(send+1));
+		for(i = 0; i < length; i++){
+			printf(" %x",*(send+i));
 		}
 	#endif
 
