@@ -24,6 +24,7 @@
 #ifdef FRDM
 #include "uart.h"
 #include "RGB.h"
+#include "dma.h"
 #endif
 
 #include "project_3.h"

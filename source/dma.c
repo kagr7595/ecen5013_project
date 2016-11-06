@@ -9,18 +9,15 @@
 ****************************************************************************/
 
 /* Included libraries */
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include "MKL25Z4.h"
+#include "dma.h"
 
 // enable/disable DMAMUX CFG
 void dmamux_en(uint8_t enable)
 {
     if(enable)
-	DMAMUX0_CHCFG0 |= DMAMUX_CHCFG_ENBL_MASK;
+    	DMAMUX0_CHCFG0 |= DMAMUX_CHCFG_ENBL_MASK;
     else
-	DMAMUX0_CHCFG0 = 0x00;
+    	DMAMUX0_CHCFG0 = 0x00;
 }
 
 // Check for errors and done bit.  
@@ -28,22 +25,23 @@ void dmamux_en(uint8_t enable)
 void dma_status()
 {
     // Clear errors or done bit out of Byte Count Register (DMA_DSR_BCRn) (if any)
-    if(/* Bit30 Config Err          */ ((DMA_DSR_BCR0 & DMA_DSR_BCR0_CE_MASK  ) == DMA_DSR_BCR_CE_MASK  )
-       |/*Bit29 Bus error on source */ ((DMA_DSR_BCR0 & DMA_DSR_BCR0_BES_MASK ) == DMA_DSR_BCR_BES_MASK )
-       |/*Bit28 Bus error on dest   */ ((DMA_DSR_BCR0 & DMA_DSR_BCR0_BED_MASK ) == DMA_DSR_BCR_BED_MASK )
-       |/*Bit24 Transaction done    */ ((DMA_DSR_BCR0 & DMA_DSR_BCR0_DONE_MASK) == DMA_DSR_BCR_DONE_MASK) )
+    if(/* Bit30 Config Err          */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_CE_MASK  ) == DMA_DSR_BCR_CE_MASK  )
+       |/*Bit29 Bus error on source */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_BES_MASK ) == DMA_DSR_BCR_BES_MASK )
+       |/*Bit28 Bus error on dest   */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_BED_MASK ) == DMA_DSR_BCR_BED_MASK )
+       |/*Bit24 Transaction done    */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_DONE_MASK) == DMA_DSR_BCR_DONE_MASK) )
     {
 	
         // except during init, this should be used in an interrupt service routine to clear the DMA interrupt and error bits   
-	DMA_DSR_BCR0 |= DMA_DSR_BCR_DONE_MASK; //0x1000000u (24th bit) //setting done bit resets the status bits
+    	DMA_DSR_BCR0 |= DMA_DSR_BCR_DONE_MASK; //0x1000000u (24th bit) //setting done bit resets the status bits
     }
 
 }
+
 void dma_init() 
 {
     //Enable DMA0_IRQInterrupt
     //enable_irq(INT_DMA0 -16);
-    NVIC_ENABLE(DMA0_IRQn);
+	NVIC_EnableIRQ(DMA0_IRQn);
 
     // Enable DMAMUX AND DMA Clocks
     SIM_SCGC6 |= SIM_SCGC6_DMAMUX_MASK; //0x2u
@@ -86,25 +84,25 @@ void dma_init()
 
 
 //DMA writes and reads
-uint8_t dma_transfer(uint32_t * src, uint32_t * dst, uint32_t byte_length)
+uint8_t dma_transfer(uint8_t * src, uint8_t * dst, uint32_t byte_length)
 {    
     if(byte_length/4 > 0)
     {
-	uint32_t word_length = byte_length/4;
-	//split dma request in terms of words and bytes
-	dma_word(src, dst, word_length);
-	if(byte_length%4 > 0) {
-	    uint32_t * new_src = src+word_length*4;
-	    uint32_t * new_dst = dst+word_length*4;
-	    dma_byte(new_src,new_dst,byte_length - word_length*4); //leftover bytes (between 1 and 3)
-	}
+    	uint32_t word_length = byte_length/4;
+    	//split dma request in terms of words and bytes
+    	dma_word(src, dst, word_length);
+		if(byte_length%4 > 0) {
+			uint8_t * new_src = src+word_length*4;
+			uint8_t * new_dst = dst+word_length*4;
+			dma_byte(new_src,new_dst,byte_length - word_length*4); //leftover bytes (between 1 and 3)
+		}
     }
 
     return 0;
 }
 
 //Run DMA in byte mode
-uint8_t dma_byte(uint32_t * src, uint32_t * dst, uint32_t byte_length)
+uint8_t dma_byte(uint8_t * src, uint8_t * dst, uint32_t byte_length)
 {
 
     //Disable DMAMUX before configuring
@@ -132,14 +130,14 @@ uint8_t dma_byte(uint32_t * src, uint32_t * dst, uint32_t byte_length)
     DMA_DCR0 |= /*Bit16    Start Transfer*/ DMA_DCR_START_MASK;
 
     // Check for dma done
-    dma_clear_status();
+    dma_clear_status(0);
 
     return 0;
 }
 
 
 //Run DMA in word mode
-uint8_t dma_word(uint32_t * src, uint32_t * dst, uint32_t word_length)
+uint8_t dma_word(uint8_t * src, uint8_t * dst, uint32_t word_length)
 {        
     // Check for dma done
     dma_status();
@@ -171,7 +169,7 @@ uint8_t dma_word(uint32_t * src, uint32_t * dst, uint32_t word_length)
     DMA_DCR0 |= /*Bit16    Start Transfer*/ DMA_DCR_START_MASK;
 
     // Check for dma done
-    dma_clear_status();
+    dma_clear_status(0);
     return 0;
 }
 
@@ -182,45 +180,45 @@ void dma_set_bcr_length(uint32_t byte_length)
     // BCR must be written with value equal to or less than 0F_FFFFh
     // Bits 23-20 will read back as 1110b if equal to or less, otherwise if larger then 1111b
     uint8_t error_toolarge [256]= "Byte transfer length is too large for DMA, Expected less than 0x0F_FFFF but received \0";
-    if(byte_length > 0x0FFFFFh) { Log1(error_toolarge, count2null(error_toolarge), byte_length, UI32); } //Continue on as DMA BCR will show an error if one occurs
+    if(byte_length > 0x0FFFFF) { LOG_1(error_toolarge, count2null(error_toolarge), byte_length, UI32); } //Continue on as DMA BCR will show an error if one occurs
     DMA_DSR_BCR0 = DMA_DSR_BCR_BCR(byte_length);
 
 }
 
 // Clears errors and sets done bit. 
-void dma_clear_status(uint8_t in_init = 0)
+void dma_clear_status(uint8_t in_init)
 {
     uint8_t error_CE [256] = "Config error occurred";
     uint8_t error_BES [256] = "Bus error on source occurred";
     uint8_t error_BED [256] = "Bus error on destination occurred";
     uint8_t log_transfer [256] = "\nFinished DMA Transfer\0";
     // Clear errors or done bit out of Byte Count Register (DMA_DSR_BCRn) (if any)
-    if(/* Bit30 Config Err          */ ((DMA_DSR_BCR0 & DMA_DSR_BCR0_CE_MASK  ) == DMA_DSR_BCR_CE_MASK  )
-       |/*Bit29 Bus error on source */ ((DMA_DSR_BCR0 & DMA_DSR_BCR0_BES_MASK ) == DMA_DSR_BCR_BES_MASK )
-       |/*Bit28 Bus error on dest   */ ((DMA_DSR_BCR0 & DMA_DSR_BCR0_BED_MASK ) == DMA_DSR_BCR_BED_MASK )
-       |/*Bit24 Transaction done    */ ((DMA_DSR_BCR0 & DMA_DSR_BCR0_DONE_MASK) == DMA_DSR_BCR_DONE_MASK) )
+    if(/* Bit30 Config Err          */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_CE_MASK  ) == DMA_DSR_BCR_CE_MASK  )
+       |/*Bit29 Bus error on source */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_BES_MASK ) == DMA_DSR_BCR_BES_MASK )
+       |/*Bit28 Bus error on dest   */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_BED_MASK ) == DMA_DSR_BCR_BED_MASK )
+       |/*Bit24 Transaction done    */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_DONE_MASK) == DMA_DSR_BCR_DONE_MASK) )
     {
-	if(!in_init) 
-	{
-	    if((DMA_DSR_BCR0 & DMA_DSR_BCR0_CE_MASK  ) == DMA_DSR_BCR_CE_MASK  )
-		Log0(error_CE,count2null(error_CE));
-	    if((DMA_DSR_BCR0 & DMA_DSR_BCR0_BES_MASK ) == DMA_DSR_BCR_BES_MASK )
-		Log0(error_BES,count2null(error_BES));
-	    if((DMA_DSR_BCR0 & DMA_DSR_BCR0_BED_MASK ) == DMA_DSR_BCR_BED_MASK )
-		Log0(error_BED,count2null(error_BED));
-	}	    
+    	if(!in_init)
+    	{
+    		if((DMA_DSR_BCR0 & DMA_DSR_BCR_CE_MASK  ) == DMA_DSR_BCR_CE_MASK  )
+    			LOG_0(error_CE,count2null(error_CE));
+    		if((DMA_DSR_BCR0 & DMA_DSR_BCR_BES_MASK ) == DMA_DSR_BCR_BES_MASK )
+    			LOG_0(error_BES,count2null(error_BES));
+    		if((DMA_DSR_BCR0 & DMA_DSR_BCR_BED_MASK ) == DMA_DSR_BCR_BED_MASK )
+    			LOG_0(error_BED,count2null(error_BED));
+    	}
     }
     	
     // except during init, this should be used in an interrupt service routine to clear the DMA interrupt and error bits   
     DMA_DSR_BCR0 |= DMA_DSR_BCR_DONE_MASK; //0x1000000u (24th bit) //setting done bit resets the status bits
 
-    Log0(log_transfer, count2null(log_transfer));
+    LOG_0(log_transfer, count2null(log_transfer));
 }
 
 
 // Handles DMA0 interrupt request at end of data transfer
 void DMA0_IRQHandler()
 {
-    dma_clear_status();
+    dma_clear_status(0);
 
 }
