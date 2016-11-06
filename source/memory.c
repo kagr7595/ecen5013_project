@@ -21,7 +21,7 @@
 int8_t my_memmove(uint8_t * src, uint8_t * dst, uint32_t length)
 {
     uint32_t i;
-    uint8_t orig_copy_src[length];
+    //uint8_t orig_copy_src[length];
     
     // if src pointer is NULL
     if (src == NULL) {return 1;}
@@ -29,15 +29,17 @@ int8_t my_memmove(uint8_t * src, uint8_t * dst, uint32_t length)
     else if (dst == NULL) {return 2;}
     // if length is less than or equal to 0
     else if (length <= 0 ) {return 3;}
+    // if the memory locations for both both arrays aren't distinct, return 5
+    else if (((src+length-1 >= dst) && (src+length-1 <= dst+length-1)) || ((dst+length-1 >= src) && (dst+length-1 <= src+length-1))) {return 5;}
     // if no condition matches take pointer and length and reverse byte order
     else 
     {
         // make a copy of the original src before modification
         // use this copy to compare the move function to the original data
-        for (i = 0; i < length; i++)
-        {
-            *(orig_copy_src+i) = *(src+i);
-        }
+        //for (i = 0; i < length; i++)
+        //{
+        //    *(orig_copy_src+i) = *(src+i);
+        //}
         
         // move bytes from src array to dst array
         for (i = 0; i < length; i++)
@@ -48,10 +50,10 @@ int8_t my_memmove(uint8_t * src, uint8_t * dst, uint32_t length)
         // compare orig_copy_src (highest to lowest byte) to 
         // reversed src (lowest to highest byte)
         // output error if different
-        for (i = 0; i < length; i++)
-        {
-            if (*(orig_copy_src+i) != *(dst+i)) {return 4;}
-        }
+        //for (i = 0; i < length; i++)
+        //{
+        //    if (*(orig_copy_src+i) != *(dst+i)) {return 4;}
+        //}
     }
     
     return 0;

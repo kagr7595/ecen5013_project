@@ -28,7 +28,6 @@
 
 #include "project_2.h"
 
-
 void project_2_report()
 {
 #ifdef FRDM

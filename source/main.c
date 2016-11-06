@@ -27,6 +27,9 @@ int main()
   project_2_report();
 #endif
 
+#ifdef PROJECT_3
+  project_3_report();
+#endif
 
     return 0;
 }
