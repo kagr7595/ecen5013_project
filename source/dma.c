@@ -20,23 +20,6 @@ void dmamux_en(uint8_t enable)
     	DMAMUX0_CHCFG0 = 0x00;
 }
 
-// Check for errors and done bit.  
-// Return 1 when done bit is set and all errors accounted for.
-void dma_status()
-{
-    // Clear errors or done bit out of Byte Count Register (DMA_DSR_BCRn) (if any)
-    if(/* Bit30 Config Err          */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_CE_MASK  ) == DMA_DSR_BCR_CE_MASK  )
-       |/*Bit29 Bus error on source */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_BES_MASK ) == DMA_DSR_BCR_BES_MASK )
-       |/*Bit28 Bus error on dest   */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_BED_MASK ) == DMA_DSR_BCR_BED_MASK )
-       |/*Bit24 Transaction done    */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_DONE_MASK) == DMA_DSR_BCR_DONE_MASK) )
-    {
-	
-        // except during init, this should be used in an interrupt service routine to clear the DMA interrupt and error bits   
-    	DMA_DSR_BCR0 |= DMA_DSR_BCR_DONE_MASK; //0x1000000u (24th bit) //setting done bit resets the status bits
-    }
-
-}
-
 void dma_init() 
 {
     //Enable DMA0_IRQInterrupt
@@ -86,17 +69,18 @@ void dma_init()
 //DMA writes and reads
 uint8_t dma_transfer(uint8_t * src, uint8_t * dst, uint32_t byte_length)
 {    
-    if(byte_length/4 > 0)
+	uint32_t word_length = byte_length/4;
+	uint32_t leftover_byte_length = byte_length%4;
+    if(word_length > 0)
     {
-    	uint32_t word_length = byte_length/4;
     	//split dma request in terms of words and bytes
     	dma_word(src, dst, word_length);
-		if(byte_length%4 > 0) {
-			uint8_t * new_src = src+word_length*4;
-			uint8_t * new_dst = dst+word_length*4;
-			dma_byte(new_src,new_dst,byte_length - word_length*4); //leftover bytes (between 1 and 3)
-		}
     }
+	if(leftover_byte_length > 0) {
+		uint8_t * new_src = src+word_length*4;
+		uint8_t * new_dst = dst+word_length*4;
+		dma_byte(new_src,new_dst,leftover_byte_length); //leftover bytes (between 1 and 3)
+	}
 
     return 0;
 }
@@ -129,9 +113,6 @@ uint8_t dma_byte(uint8_t * src, uint8_t * dst, uint32_t byte_length)
     //Start DMA Transfer
     DMA_DCR0 |= /*Bit16    Start Transfer*/ DMA_DCR_START_MASK;
 
-    // Check for dma done
-    dma_clear_status(0);
-
     return 0;
 }
 
@@ -139,9 +120,6 @@ uint8_t dma_byte(uint8_t * src, uint8_t * dst, uint32_t byte_length)
 //Run DMA in word mode
 uint8_t dma_word(uint8_t * src, uint8_t * dst, uint32_t word_length)
 {        
-    // Check for dma done
-    dma_status();
-
     //Disable DMAMUX before configuring
     dmamux_en(DMAMUX_DISABLE);
 
@@ -168,8 +146,6 @@ uint8_t dma_word(uint8_t * src, uint8_t * dst, uint32_t word_length)
     //Start DMA Transfer
     DMA_DCR0 |= /*Bit16    Start Transfer*/ DMA_DCR_START_MASK;
 
-    // Check for dma done
-    dma_clear_status(0);
     return 0;
 }
 
@@ -188,17 +164,16 @@ void dma_set_bcr_length(uint32_t byte_length)
 // Clears errors and sets done bit. 
 void dma_clear_status(uint8_t in_init)
 {
-    uint8_t error_CE [256] = "Config error occurred";
-    uint8_t error_BES [256] = "Bus error on source occurred";
-    uint8_t error_BED [256] = "Bus error on destination occurred";
-    uint8_t log_transfer [256] = "\nFinished DMA Transfer\0";
+    uint8_t error_CE [256] = "Config error occurred\0";
+    uint8_t error_BES [256] = "Bus error on source occurred\0";
+    uint8_t error_BED [256] = "Bus error on destination occurred\0";
     // Clear errors or done bit out of Byte Count Register (DMA_DSR_BCRn) (if any)
     if(/* Bit30 Config Err          */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_CE_MASK  ) == DMA_DSR_BCR_CE_MASK  )
        |/*Bit29 Bus error on source */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_BES_MASK ) == DMA_DSR_BCR_BES_MASK )
        |/*Bit28 Bus error on dest   */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_BED_MASK ) == DMA_DSR_BCR_BED_MASK )
        |/*Bit24 Transaction done    */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_DONE_MASK) == DMA_DSR_BCR_DONE_MASK) )
     {
-    	if(!in_init)
+    	if(/*!in_init*/1)
     	{
     		if((DMA_DSR_BCR0 & DMA_DSR_BCR_CE_MASK  ) == DMA_DSR_BCR_CE_MASK  )
     			LOG_0(error_CE,count2null(error_CE));
@@ -206,13 +181,16 @@ void dma_clear_status(uint8_t in_init)
     			LOG_0(error_BES,count2null(error_BES));
     		if((DMA_DSR_BCR0 & DMA_DSR_BCR_BED_MASK ) == DMA_DSR_BCR_BED_MASK )
     			LOG_0(error_BED,count2null(error_BED));
+
+            DMA_DSR_BCR0 |= DMA_DSR_BCR_DONE_MASK; //0x1000000u (24th bit) //setting done bit resets the status bits
     	}
     }
     	
-    // except during init, this should be used in an interrupt service routine to clear the DMA interrupt and error bits   
-    DMA_DSR_BCR0 |= DMA_DSR_BCR_DONE_MASK; //0x1000000u (24th bit) //setting done bit resets the status bits
-
-    LOG_0(log_transfer, count2null(log_transfer));
+    if(!in_init)
+    {
+        // except during init, this should be used in an interrupt service routine to clear the DMA interrupt and error bits
+        DMA_DSR_BCR0 |= DMA_DSR_BCR_DONE_MASK; //0x1000000u (24th bit) //setting done bit resets the status bits
+    }
 }
 
 

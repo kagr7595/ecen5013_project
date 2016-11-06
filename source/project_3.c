@@ -32,8 +32,23 @@
 void project_3_report()
 {
 #ifdef FRDM
+#ifdef MY_DMA
+	dma_init();
+#endif
     init_uart();
+#ifdef MY_DMA
+    uint8_t dma_array[256] = "0123456789ABCDEF.01234567890ABCDEF.0123456789ABCDEF.0123456789ABCDEF.\0";
+	uint8_t * dma_array_ptr1 = dma_array+0;
+	uint8_t * dma_array_ptr2 = dma_array+10;
+	uint8_t second_array[256] = "Sunshine + Kittens = Happiness\0";
+    dma_transfer(second_array,dma_array,count2null(second_array));
+    my_newcharacter('\n',1);
+    LOG_0(dma_array,count2null(dma_array));
+    my_newcharacter('\n',1);
+#endif
     RGB_init();
+
+
 
 #ifdef PI
     // tests the receiving of a command
