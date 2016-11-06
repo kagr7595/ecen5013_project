@@ -13,6 +13,8 @@
 #include <stdint.h>
 #include "uart.h"
 #include "memory.h"
+#include "RGB.h"
+#include "LED_control.h"
 
 #define MAX_DATA_SIZE 10
 
@@ -39,6 +41,12 @@ typedef struct CI_Msg_t{
 	uint16_t checksum; // Error detection checksum
 } CI_Msg;
 
+// sends data using either UART or SPI depending on the compilation flag "SPI"
+void send_data(uint8_t *send, uint8_t length);
+
+// receives data using either UART or SPI depending on the compilation flag "SPI"
+void receive_data(uint8_t *read, uint8_t length);
+
 // takes in the important parameters for a CI_Msg and constructs this at the pointer *cmd
 uint8_t create_cmd(CI_Msg *cmd, Cmds command, uint8_t length, uint8_t *data);
 
@@ -55,5 +63,8 @@ uint16_t create_checksum(CI_Msg *cmd);
 
 // verifies the checksum upon a received command
 uint8_t verify_checksum(CI_Msg *cmd);
+
+// takes a CI_Msg and calls the corresponding function
+uint8_t run_cmd(CI_Msg *cmd);
 
 #endif

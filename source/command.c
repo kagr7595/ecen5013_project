@@ -12,6 +12,24 @@
 
 #include "command.h"
 
+// sends data using either UART or SPI depending on the compilation flag "SPI"
+void send_data(uint8_t *send, uint8_t length){
+#ifndef SPI
+	uart_tx_data(send, length);
+#else
+
+#endif
+}
+
+// receives data using either UART or SPI depending on the compilation flag "SPI"
+void receive_data(uint8_t *read, uint8_t length){
+#ifndef SPI
+	uart_rx_data(read, length);
+#else
+
+#endif
+}
+
 // takes in the important parameters for a CI_Msg and constructs this at the pointer *cmd
 uint8_t create_cmd(CI_Msg *cmd, Cmds command, uint8_t length, uint8_t *data){
 	cmd->command = command;
@@ -25,21 +43,21 @@ uint8_t create_cmd(CI_Msg *cmd, Cmds command, uint8_t length, uint8_t *data){
 // a pointer to where the received command will be placed is passed in
 uint8_t receive_cmd(CI_Msg *cmd) {
 	uint8_t read[MAX_DATA_SIZE];
-	uart_rx_data(read, 1);
+	receive_data(read, 1);
 	cmd->command = (Cmds)(*read);
 	if((cmd->command < 1) || (cmd->command > 2)) {
 		return UNKNOWN_CMD;
 	}
-	uart_rx_data(read, 1);
+	receive_data(read, 1);
 	cmd->length = (*read);
 	if(cmd->length < 0) {
 		return INVALID_LENGTH;
 	}
 	if(cmd->length > 0) {
-		uart_rx_data(read, cmd->length);
+		receive_data(read, cmd->length);
 		my_memmove(read, cmd->data , cmd->length);
 	}
-	uart_rx_data(read, 2);
+	receive_data(read, 2);
 	cmd->checksum = (((uint16_t)(*read)) << 8) | ((uint16_t)(*(read+1)));
 	if(verify_checksum(cmd)){
 		return INCORRECT_CHECKSUM;
@@ -60,7 +78,7 @@ uint8_t send_cmd(CI_Msg *cmd) {
 	}
 	*(send+2+cmd->length) = (uint8_t)((cmd->checksum) >> 8);
 	*(send+3+cmd->length) = (uint8_t)(cmd->checksum);
-	uart_tx_data(send, length);
+	send_data(send, length);
 	return 0;
 }
 
@@ -87,6 +105,22 @@ uint8_t verify_checksum(CI_Msg *cmd) {
 		return 1;
 	}
 	return 0;
+}
+
+// runs the received command
+uint8_t run_cmd(CI_Msg *cmd) {
+	if(cmd->command == SET_COLOR){
+		if(cmd->length != 1){return INVALID_LENGTH;}
+		if((*(cmd->data) < OFF) || ((*(cmd->data)) > RGB)){return INVALID_DATA;}
+		set_color(*(cmd->data));
+	}
+	else if(cmd->command == SET_BRIGHTNESS){
+		if(cmd->length != 1){return INVALID_LENGTH;}
+		if((*(cmd->data) < 0) || ((*(cmd->data)) > 100)){return INVALID_DATA;}
+		set_brightness(*(cmd->data));
+	}
+	else {return UNKNOWN_CMD;}
+	return NO_ERROR;
 }
 
 #endif

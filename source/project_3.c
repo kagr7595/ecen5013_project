@@ -82,6 +82,11 @@ void project_3_report()
     send_cmd(&cmd2);
 #endif
 
+    CI_Msg cmd;
+    uint8_t error;
+    error = receive_cmd(&cmd);
+    run_cmd(&cmd);
+
 #endif
 }
 #endif

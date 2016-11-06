@@ -126,7 +126,7 @@ void project_2_report()
 
 #ifdef FRDM
     RGB_init();
-    int8_t color = RED;
+    uint8_t color = RED;
     uint8_t duty = 100;
     uint8_t msg[1];
     uart_rx_data(msg, 1);
