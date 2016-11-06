@@ -15,8 +15,23 @@
 // sends data using either UART or SPI depending on the compilation flag "SPI"
 void send_data(uint8_t *send, uint8_t length){
 #ifndef SPI
-	uart_tx_data(send, length);
+
+	#ifdef FRDM
+		uart_tx_data(send, length);
+	#else
+		uint8_t i = 0;
+		for(i = 0; i < legth; i++){
+			printf("%d",*(send+1));
+		}
+	#endif
+
 #else
+
+	#ifdef FRDM
+
+	#else
+
+	#endif
 
 #endif
 }
@@ -24,8 +39,20 @@ void send_data(uint8_t *send, uint8_t length){
 // receives data using either UART or SPI depending on the compilation flag "SPI"
 void receive_data(uint8_t *read, uint8_t length){
 #ifndef SPI
-	uart_rx_data(read, length);
+
+	#ifdef FRDM
+		uart_rx_data(read, length);
+	#else
+
+	#endif
+
 #else
+
+	#ifdef FRDM
+
+	#else
+
+	#endif
 
 #endif
 }
