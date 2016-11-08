@@ -13,6 +13,9 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "memory.h"
+#ifdef FRDM
+#include "dma.h"
+#endif
 
 // Take two pointers (one source and one destination) and a length of bytes
 // to move from one location to the other
@@ -30,30 +33,61 @@ int8_t my_memmove(uint8_t * src, uint8_t * dst, uint32_t length)
     // if length is less than or equal to 0
     else if (length <= 0 ) {return 3;}
     // if the memory locations for both both arrays aren't distinct, return 5
-    else if (((src+length-1 >= dst) && (src+length-1 <= dst+length-1)) || ((dst+length-1 >= src) && (dst+length-1 <= src+length-1))) {return 5;}
+    else if (src == dst) {return 0;}//do nothing as the data is the same and not worth it to waste clock cycles
+    //else if (((src+length-1 >= dst) && (src+length-1 <= dst+length-1)) || ((dst+length-1 >= src) && (dst+length-1 <= src+length-1))) {return 5;}
+    else if ((src < dst) && (src + length-1 > dst)) //src addresses overlap with dst (where src occurs first before dst)
+	{
+#ifdef MY_DMA
+    	dma_transfer(src+(dst-src),dst+(dst-src),length-(uint32_t)(dst-src));
+    	dma_transfer(src,dst,(uint32_t)(dst-src));
+#else
+    	//if there are transfers that can do 32 bits at once, do them first
+    	for(i = 0; i< length/4; i++)
+    	{
+    		*(dst +(length-1)- 0 - i*4) = *(src +(length-1) - 0 - i*4);
+    		*(dst +(length-1)- 1 - i*4) = *(src +(length-1) - 1 - i*4);
+    		*(dst +(length-1)- 2 - i*4) = *(src +(length-1) - 2 - i*4);
+    		*(dst +(length-1)- 3 - i*4) = *(src +(length-1) - 3 - i*4);
+    	}
+    	src = src-i*4;
+    	dst = dst-i*4;
+    	for (i = 0; i < length%4; i++)
+    	{
+    		*(dst +(length-1)- i) = *(src +(length-1) - i);
+    	}
+    	// move bytes from src array to dst array
+		//for (i = 0; i < length; i++)
+		//{
+		//	*(dst+(length-1)-i) = *(src+(length-1)-i);
+		//}
+#endif
+	}
     // if no condition matches take pointer and length and reverse byte order
     else 
     {
-        // make a copy of the original src before modification
-        // use this copy to compare the move function to the original data
+#ifdef MY_DMA
+    	dma_transfer(src,dst,length);
+#else
+    	//if there are transfers that can do 32 bits at once, do them first
+    	for(i = 0; i< length/4; i++)
+    	{
+    		*(dst + 0 + i*4) = *(src + 0 + i*4);
+    		*(dst + 1 + i*4) = *(src + 1 + i*4);
+    		*(dst + 2 + i*4) = *(src + 2 + i*4);
+    		*(dst + 3 + i*4) = *(src + 3 + i*4);
+    	}
+    	src = src+i*4;
+    	dst = dst+i*4;
+    	for (i = 0; i < length%4; i++)
+    	{
+    		*(dst + i) = *(src + i);
+    	}
+    	// move bytes from src array to dst array
         //for (i = 0; i < length; i++)
         //{
-        //    *(orig_copy_src+i) = *(src+i);
+        //    *(dst+i) = *(src + i);
         //}
-        
-        // move bytes from src array to dst array
-        for (i = 0; i < length; i++)
-        {
-            *(dst+i) = *(src + i);
-        }
-        
-        // compare orig_copy_src (highest to lowest byte) to 
-        // reversed src (lowest to highest byte)
-        // output error if different
-        //for (i = 0; i < length; i++)
-        //{
-        //    if (*(orig_copy_src+i) != *(dst+i)) {return 4;}
-        //}
+#endif
     }
     
     return 0;
@@ -74,11 +108,35 @@ int8_t my_memzero(uint8_t * src, uint32_t length)
     // if no condition matches take pointer and length and reverse byte order
     else 
     {
-        for (i = 0; i < length; i++) 
+#ifdef MY_DMA
+    	uint8_t zero [4] = "0000";
+    	uint32_t num_transfers = 0;
+    	if(length%4) { num_transfers = length/4 + 1; }
+    	else { num_transfers = length/4; }
+
+    	for (i = 0; i< num_transfers; i++)
+    	{
+    		if(length >= 4) {
+    			dma_transfer(zero,src+i*4,4);
+    			length = length - 4;
+    		} else
+    			dma_transfer(zero,src+i*4,length);
+    	}
+#else
+    	//if there are transfers that can do 32 bits at once, do them first
+    	for(i = 0; i< length/4; i++)
+    	{
+    		*(src + 0 + i*4) = '0';
+    		*(src + 1 + i*4) = '0';
+    		*(src + 2 + i*4) = '0';
+    		*(src + 3 + i*4) = '0';
+    	}
+    	src = src+i*4;
+        for (i = 0; i < length%4; i++)
         {
-            *(src + i) = 0;
-            if (*(src + i) != 0) {return 3;}            
+            *(src + i) = '0';
         }
+#endif
     }
     return 0;
 }

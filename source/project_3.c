@@ -36,15 +36,40 @@ void project_3_report()
 	dma_init();
 #endif
     init_uart();
-#ifdef MY_DMA
-    uint8_t dma_array[256] = "0123456789ABCDEF.01234567890ABCDEF.0123456789ABCDEF.0123456789ABCDEF.\0";
+#ifdef MY_MEM_TEST_N_PROFILER
+    uint8_t dma_array[256] = "00000111112222233333444445555566666777778888899999\0";
 	uint8_t * dma_array_ptr1 = dma_array+0;
 	uint8_t * dma_array_ptr2 = dma_array+10;
-	uint8_t second_array[256] = "Sunshine + Kittens = Happiness\0";
-    dma_transfer(second_array,dma_array,count2null(second_array));
+	uint8_t second_array[256] = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPp\0";
+	LOG_0(dma_array,count2null(dma_array));
     my_newcharacter('\n',1);
+
+    my_memmove(dma_array_ptr1,dma_array_ptr2,20);
+
     LOG_0(dma_array,count2null(dma_array));
     my_newcharacter('\n',1);
+    my_memmove(dma_array_ptr2,dma_array_ptr1,20);
+    LOG_0(dma_array,count2null(dma_array));
+    my_newcharacter('\n',1);
+    my_newcharacter('\n',1);
+
+    my_memzero(dma_array_ptr2,18);
+    LOG_0(dma_array,count2null(dma_array));
+    my_newcharacter('\n',1);
+
+    my_memmove(second_array,dma_array_ptr1 + 3,count2null(second_array));
+    my_newcharacter('\n',1);
+	LOG_0(dma_array,count2null(dma_array));
+    my_newcharacter('\n',1);
+    my_memmove(dma_array_ptr1+5,dma_array_ptr2+7,23);
+    LOG_0(dma_array,count2null(dma_array));
+    my_newcharacter('\n',1);
+    my_reverse(dma_array_ptr2,14);
+    LOG_0(dma_array,count2null(dma_array));
+
+    profiler_tests();
+    my_newcharacter('\n',2);
+
 #endif
     RGB_init();
 
