@@ -88,37 +88,31 @@ int8_t my_memmove(uint8_t * src, uint8_t * dst, uint32_t length)
     //src addresses overlap with dst (where src occurs first before dst) and is at least 32 bytes address difference between src and dst
 #ifndef MY_DMA
     else if (length > 3)
-	{
+    {
     	if ((src+3<dst) && (src+(length-1) > dst))
 		{
 			if(rem_src==rem_dst)
 			{
-				//do a 32 bit mode, first find out if (src+(dst-src))%4 is on a boundary, if not then do byte mode to start
-				if(rem_dst!=0)
-					my_memmove_byte(src+(uint32_t)(dst-src),dst+(uint32_t)(dst-src),rem_dst);
-				aligned_src = (uint32_t *)(src + (uint32_t)(dst-src) + rem_dst);
-				aligned_dst = (uint32_t *)(dst + (uint32_t)(dst-src) + rem_dst);
-				length = length - rem_dst;
-				uint32_t num_32 = (length-(uint32_t)(dst-src))/4;
-				for(i = 0; i<num_32;i++) //take into account that we started at the dst rather than the src, so need to subtract from the length
-				{
-					*(aligned_dst + i) = *(aligned_src + i);
-				}
-				if(length-(uint32_t)(dst-src)>0)
-					my_memmove_byte((uint8_t *)aligned_src + i*4,(uint8_t *)aligned_dst + i*4, length-(uint32_t)(dst-src));
-				//now go back and loop around (at the beginning)
-				if(rem_src!=0)
-					my_memmove_byte(src,dst,rem_src);
-				aligned_src = (uint32_t *)(src + rem_src);
-				aligned_dst = (uint32_t *)(dst + rem_src);
-				length = length - rem_src;
-				for(i = 0; i<length/4;i++)
-				{
-					*(aligned_dst + i) = *(aligned_src + i);
-				}
-				if(length>0)
-					my_memmove_byte((uint8_t *)aligned_src + i*4,(uint8_t *)aligned_dst + i*4, length);
+				uint8_t rem_end_src = ((uint32_t)src + length)%4;
+				uint8_t * src_end = src + length;
+				uint8_t * dst_end = dst + length;
 
+				//start from end of array and find out if it is aligned - if not, then do byte mode until alignment occurs
+				if(rem_end_src>0)
+					my_memmove_byte(src_end-(rem_end_src-1), dst_end-(rem_end_src-1),rem_end_src);
+
+				aligned_src = (uint32_t *)(src_end-rem_end_src);
+				aligned_dst = (uint32_t *)(dst_end-rem_end_src);
+				length = length - rem_end_src;
+
+				for(i = 1; i< length/4 + 1; i++)
+				{
+					*(aligned_dst - i) = *(aligned_src - i);
+				}
+
+				length = length - (i-1)*4;
+				if(length>0)
+					my_memmove_byte(src,dst,length);
 			}else
 			{
 				//byte mode(call my_memmove_byte)
