@@ -63,6 +63,7 @@ uint8_t create_cmd(CI_Msg *cmd, Cmds command, uint8_t length, uint8_t *data){
 	cmd->length = length;
 	my_memmove(data, cmd->data , length);
 	cmd->checksum = create_checksum(cmd);
+	return 0;
 }
 
 // waits for a command packet to be received

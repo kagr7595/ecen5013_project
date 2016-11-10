@@ -13,25 +13,24 @@
 #ifdef FRDM
 #include "MKL25Z4.h"
 #include "core_cm0plus.h"
-//#include "startup_MKL25Z4.S"
 #endif
-
-//#include "circbuf.h"
 
 /* Defines and Structures section
  ***************************************************************************/
 #define BUF_LENGTH 100
+#define CS_NRF_LOW() (PTC_BASE_PTR->PCOR |= (1<<8))
+#define CS_NRF_HIGH() (PTC_BASE_PTR->PSOR |= (1<<8))
 
 /* Function prototype Section
  * Add protoypes for all functions called by this module, with the exception
  * of runtime routines.
  ***************************************************************************/
 
-// SPI Receive data to be stored into another pointer for processing
-void SPI_rx_data(uint8_t *read, uint8_t length);
+// SPI Receive data to be received
+uint8_t SPI_rx_byte();
 
 // SPI send data to uart
-void SPI_tx_data(uint8_t *send, uint8_t length);
+void SPI_tx_byte(uint8_t send);
 
 // Sets up SPI registers
 void SPI_init(void);

@@ -154,6 +154,13 @@ void LOG_2(uint8_t * data, uint8_t len, float f_data,  uint8_t data_type)
     LOG_0(str,num_elements);
 }
 
+// Takes in an array of hex characters and a length, printing out the hex in ascii
+void LOG_3(uint8_t * hex, uint8_t len)
+{
+	uint8_t ascii[2*len];
+    hex_to_ascii(hex, ascii, len);
+    LOG_0(ascii,2*len);
+}
 
 // Creates a new logger repeatable character (as many as num_character). 
 // Up to 256 of the same character (useful for spacing and newlines)
@@ -166,6 +173,31 @@ void my_newcharacter(uint8_t character, uint8_t num_character)
 	*(print+i) = character;
     }
     LOG_0(print,i);
+}
+
+// Converts an array of bytes to an array of ascii characters
+void hex_to_ascii(uint8_t* hex, uint8_t* ascii, uint8_t hex_length)
+{
+	// The length of the ascii array should be twice that of the hex array since each
+	// hex number is 4 bits and each ascii 8 bits
+	int8_t num1, num2;
+	int8_t i = 0;
+	for(i = 0; i < hex_length; i++){
+		num1 = *(hex+i) >> 4;
+		num2 = *(hex+i) & 0x0F;
+		if(num1 < 10){
+			*(ascii+2*i) = num1 + '0';
+		}
+		else{
+			*(ascii+2*i) = num1 + 'A' - 10;
+		}
+		if(num2 < 10){
+			*(ascii+2*i+1) = num2 + '0';
+		}
+		else{
+			*(ascii+2*i+1) = num2 + 'A' - 10;
+		}
+	}
 }
 
 #endif
