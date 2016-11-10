@@ -21,10 +21,9 @@
 // to move from one location to the other
 // Checks overlapped areas between the two memory blocks
 // Returns error if move failed
-int8_t my_memmove(uint8_t * src, uint8_t * dst, uint32_t length)
+int8_t my_memmove_byte(uint8_t * src, uint8_t * dst, uint32_t length)
 {
     uint32_t i;
-    //uint8_t orig_copy_src[length];
     
     // if src pointer is NULL
     if (src == NULL) {return 1;}
@@ -34,64 +33,132 @@ int8_t my_memmove(uint8_t * src, uint8_t * dst, uint32_t length)
     else if (length <= 0 ) {return 3;}
     // if the memory locations for both both arrays aren't distinct, return 5
     else if (src == dst) {return 0;}//do nothing as the data is the same and not worth it to waste clock cycles
-    //else if (((src+length-1 >= dst) && (src+length-1 <= dst+length-1)) || ((dst+length-1 >= src) && (dst+length-1 <= src+length-1))) {return 5;}
-    else if ((src < dst) && (src + length-1 > dst)) //src addresses overlap with dst (where src occurs first before dst)
-	{
+    //src addresses overlap with dst (where src occurs first before dst)
+    else if ((src < dst) && (src + length-1 > dst))
+    {
 #ifdef MY_DMA
-    	dma_transfer(src+(dst-src),dst+(dst-src),length-(uint32_t)(dst-src));
-    	dma_transfer(src,dst,(uint32_t)(dst-src));
+    	dma_transfer(src+(dst-src),dst+(dst-src),length-(uint32_t)(dst-src),1);
+    	dma_transfer(src,dst,(uint32_t)(dst-src),1);
 #else
-    	//if there are transfers that can do 32 bits at once, do them first
-    	for(i = 0; i< length/4; i++)
-    	{
-    		*(dst +(length-1)- 0 - i*4) = *(src +(length-1) - 0 - i*4);
-    		*(dst +(length-1)- 1 - i*4) = *(src +(length-1) - 1 - i*4);
-    		*(dst +(length-1)- 2 - i*4) = *(src +(length-1) - 2 - i*4);
-    		*(dst +(length-1)- 3 - i*4) = *(src +(length-1) - 3 - i*4);
-    	}
-    	src = src-i*4;
-    	dst = dst-i*4;
-    	for (i = 0; i < length%4; i++)
-    	{
-    		*(dst +(length-1)- i) = *(src +(length-1) - i);
-    	}
     	// move bytes from src array to dst array
-		//for (i = 0; i < length; i++)
-		//{
-		//	*(dst+(length-1)-i) = *(src+(length-1)-i);
-		//}
+		for (i = 0; i < length; i++)
+		{
+			*(dst+(length-1)-i) = *(src+(length-1)-i);
+		}
 #endif
 	}
     // if no condition matches take pointer and length and reverse byte order
     else 
     {
 #ifdef MY_DMA
-    	dma_transfer(src,dst,length);
+    	dma_transfer(src,dst,length,1);
 #else
-    	//if there are transfers that can do 32 bits at once, do them first
-    	for(i = 0; i< length/4; i++)
-    	{
-    		*(dst + 0 + i*4) = *(src + 0 + i*4);
-    		*(dst + 1 + i*4) = *(src + 1 + i*4);
-    		*(dst + 2 + i*4) = *(src + 2 + i*4);
-    		*(dst + 3 + i*4) = *(src + 3 + i*4);
-    	}
-    	src = src+i*4;
-    	dst = dst+i*4;
-    	for (i = 0; i < length%4; i++)
-    	{
-    		*(dst + i) = *(src + i);
-    	}
     	// move bytes from src array to dst array
-        //for (i = 0; i < length; i++)
-        //{
-        //    *(dst+i) = *(src + i);
-        //}
+        for (i = 0; i < length; i++)
+        {
+            *(dst+i) = *(src + i);
+        }
 #endif
     }
     
     return 0;
 }
+
+// Take two pointers (one source and one destination) and a length of bytes (more than 4)
+// to move from one location to the other
+// Checks overlapped areas between the two memory blocks
+// Returns error if move failed
+// Only works when both src and dst are aligned - if not aligned will call my_memmove_byte until both aligned
+int8_t my_memmove(uint8_t * src, uint8_t * dst, uint32_t length)
+{
+	uint32_t i = 0;
+	uint8_t rem_src = (4-(uint32_t)src%4)%4;
+	uint8_t rem_dst = (4-(uint32_t)dst%4)%4;
+	uint32_t * aligned_src;
+	uint32_t * aligned_dst;
+
+    // if src pointer is NULL
+    if (src == NULL) {return 1;}
+    // if dst pointer is NULL
+    else if (dst == NULL) {return 2;}
+    // if length is less than or equal to 0
+    else if (length <= 0 ) {return 3;}
+    // if the memory locations for both both arrays aren't distinct, return 5
+    else if (src == dst) {return 0;}//do nothing as the data is the same and not worth it to waste clock cycles
+    //src addresses overlap with dst (where src occurs first before dst) and is at least 32 bytes address difference between src and dst
+#ifndef MY_DMA
+    else if (length > 3)
+	{
+    	if ((src+3<dst) && (src+(length-1) > dst))
+		{
+			if(rem_src==rem_dst)
+			{
+				//do a 32 bit mode, first find out if (src+(dst-src))%4 is on a boundary, if not then do byte mode to start
+				if(rem_dst!=0)
+					my_memmove_byte(src+(uint32_t)(dst-src),dst+(uint32_t)(dst-src),rem_dst);
+				aligned_src = (uint32_t *)(src + (uint32_t)(dst-src) + rem_dst);
+				aligned_dst = (uint32_t *)(dst + (uint32_t)(dst-src) + rem_dst);
+				length = length - rem_dst;
+				uint32_t num_32 = (length-(uint32_t)(dst-src))/4;
+				for(i = 0; i<num_32;i++) //take into account that we started at the dst rather than the src, so need to subtract from the length
+				{
+					*(aligned_dst + i) = *(aligned_src + i);
+				}
+				if(length-(uint32_t)(dst-src)>0)
+					my_memmove_byte((uint8_t *)aligned_src + i*4,(uint8_t *)aligned_dst + i*4, length-(uint32_t)(dst-src));
+				//now go back and loop around (at the beginning)
+				if(rem_src!=0)
+					my_memmove_byte(src,dst,rem_src);
+				aligned_src = (uint32_t *)(src + rem_src);
+				aligned_dst = (uint32_t *)(dst + rem_src);
+				length = length - rem_src;
+				for(i = 0; i<length/4;i++)
+				{
+					*(aligned_dst + i) = *(aligned_src + i);
+				}
+				if(length>0)
+					my_memmove_byte((uint8_t *)aligned_src + i*4,(uint8_t *)aligned_dst + i*4, length);
+
+			}else
+			{
+				//byte mode(call my_memmove_byte)
+				my_memmove_byte(src,dst,length);
+			}
+		} else
+		{
+			if(rem_src==rem_dst)
+			{
+				//do a 32 bit mode, first find out if src%4 is on a boundary, if not then do byte mode to start
+				if(rem_src!=0)
+				{
+					my_memmove_byte(src,dst,rem_src);
+				}
+				length = length - rem_src;
+				aligned_src = (uint32_t *)src + rem_src;
+				aligned_dst = (uint32_t *)dst + rem_src;
+				rem_src = (uint32_t)src%4;
+
+				for(i = 0; i < length/4; i++)
+				{
+					*(aligned_dst + i) = *(aligned_src + i);
+				}
+				length = length - i*4;
+				if(length > 0)
+					my_memmove_byte(src+i*4,dst+i*4,length);
+			}else
+			{
+				//byte mode(call my_memmove_byte)
+				my_memmove_byte(src,dst,length);
+			}
+		}
+	}
+#endif
+    else {
+		my_memmove_byte(src,dst,length);
+	}
+	return 0;
+}
+
 
 
 // Takes pointer to memory location and a length in bytes, 
@@ -110,18 +177,14 @@ int8_t my_memzero(uint8_t * src, uint32_t length)
     {
 #ifdef MY_DMA
     	uint8_t zero [4] = "0000";
-    	uint32_t num_transfers = 0;
-    	if(length%4) { num_transfers = length/4 + 1; }
-    	else { num_transfers = length/4; }
-
-    	for (i = 0; i< num_transfers; i++)
+    	uint8_t align = 4-(uint32_t)src%4;
+    	if((uint32_t)src%4!=0)
     	{
-    		if(length >= 4) {
-    			dma_transfer(zero,src+i*4,4);
-    			length = length - 4;
-    		} else
-    			dma_transfer(zero,src+i*4,length);
+    		dma_transfer(zero,src,align,0);
+    		length = length-align;
+    		src = src + align;
     	}
+    	dma_transfer(zero,src,length,0);
 #else
     	//if there are transfers that can do 32 bits at once, do them first
     	for(i = 0; i< length/4; i++)

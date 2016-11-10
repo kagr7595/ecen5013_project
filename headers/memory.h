@@ -31,6 +31,13 @@
 // to move from one location to the other
 // Checks overlapped areas between the two memory blocks
 // Returns error if move failed
+int8_t my_memmove_byte(uint8_t * src, uint8_t * dst, uint32_t length);
+
+// Take two pointers (one source and one destination) and a length of bytes (more than 4)
+// to move from one location to the other
+// Checks overlapped areas between the two memory blocks
+// Returns error if move failed
+// Only works when both src and dst are aligned
 int8_t my_memmove(uint8_t * src, uint8_t * dst, uint32_t length);
 
 // Takes pointer to memory location and a length in bytes, 

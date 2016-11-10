@@ -41,8 +41,12 @@ void project_3_report()
 	uint8_t * dma_array_ptr1 = dma_array+0;
 	uint8_t * dma_array_ptr2 = dma_array+10;
 	uint8_t second_array[256] = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPp\0";
+	uint8_t trial[256] = "abcdefghijklmnopqrstuvwxyz0123456789\0";
 	LOG_0(dma_array,count2null(dma_array));
     my_newcharacter('\n',1);
+    //my_memzero(dma_array_ptr2,18);
+    //LOG_0(dma_array,count2null(dma_array));
+    //my_newcharacter('\n',1);
 
     my_memmove(dma_array_ptr1,dma_array_ptr2,20);
 
@@ -61,11 +65,11 @@ void project_3_report()
     my_newcharacter('\n',1);
 	LOG_0(dma_array,count2null(dma_array));
     my_newcharacter('\n',1);
-    my_memmove(dma_array_ptr1+5,dma_array_ptr2+7,23);
-    LOG_0(dma_array,count2null(dma_array));
+    my_memmove(trial+1,trial+9,15);
+    LOG_0(trial,count2null(trial));
     my_newcharacter('\n',1);
-    my_reverse(dma_array_ptr2,14);
-    LOG_0(dma_array,count2null(dma_array));
+    my_reverse(trial+2,14);
+    LOG_0(trial,count2null(trial));
 
     profiler_tests();
     my_newcharacter('\n',2);
