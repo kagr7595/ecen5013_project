@@ -1,42 +1,50 @@
 /***************************************************************************
 *
-*  	Filename: spi.h
-*	Description: Header file for spi.c
+*  	Filename: spi_bbb.h
+*	Description: Header file for spi_bbb.c
 *                    
 *       Author: Kathy Grimes 
 *               Dylan Way
 *       
 ****************************************************************************/
-#ifndef _SPI_H
-#define _SPI_H
+#ifndef _SPI_BBB_H
+#define _SPI_BBB_H
 
-#ifdef FRDM
-#include "MKL25Z4.h"
-#include "core_cm0plus.h"
-#endif
+#ifdef BBB
 #include <stdint.h>
+#include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <getopt.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/types.h>
+#include <linux/spi/spidev.h>
+#include "log.h"
+
 
 /* Defines and Structures section
  ***************************************************************************/
-#define BUF_LENGTH 100
-#define CS_NRF_LOW() (PTC_BASE_PTR->PCOR |= (1<<8))
-#define CS_NRF_HIGH() (PTC_BASE_PTR->PSOR |= (1<<8))
+#define SPI_PATH "/dev/spidev1.0"
+
+static uint8_t mode = 1;
+//Global variable to pass into many functions
+int32_t fd;
+
+
+#define SPEED 100000
+
 
 /* Function prototype Section
  * Add protoypes for all functions called by this module, with the exception
  * of runtime routines.
  ***************************************************************************/
-// SPI wrapper for SPI_rx_byte and SPI_tx_byt
+//transfers the send byte and returns receive byte
 uint8_t SPI_tx_rx(uint8_t send);
 
-// SPI Receive data to be received
-uint8_t SPI_rx_byte();
+//SPI initialization for BBB
+void SPI_init();
 
-// SPI send data to uart
-void SPI_tx_byte(uint8_t send);
-
-// Sets up SPI registers
-void SPI_init(void);
+#endif
 
 #endif

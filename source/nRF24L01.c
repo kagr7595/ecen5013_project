@@ -20,13 +20,17 @@ uint8_t nrf_read_reg(uint8_t addr, uint8_t length, uint8_t *data){
 	if(length > 6) {return NRF_INVALID_LENGTH;}
 	else if(addr > 0x1D) {return NRF_INVALID_ADDRESS;}
 	uint8_t cmd = R_REGISTER(addr);
+#ifdef FRDM
 	CS_NRF_LOW();
+#endif
 	*data = SPI_tx_rx(cmd);
 	uint8_t i;
 	for(i = 1; i <= length; i++){
 		*(data+i) = SPI_tx_rx(0xFF);
 	}
+#ifdef FRDM
 	CS_NRF_HIGH();
+#endif
 	return NRF_NO_ERROR;
 }
 
@@ -36,13 +40,17 @@ uint8_t nrf_write_reg(uint8_t addr, uint8_t length, uint8_t *data){
 	if(length > 5) {return NRF_INVALID_LENGTH;}
 	else if(addr > 0x1D) {return NRF_INVALID_ADDRESS;}
 	uint8_t cmd = W_REGISTER(addr);
+#ifdef FRDM
 	CS_NRF_LOW();
+#endif
 	uint8_t read = SPI_tx_rx(cmd);
 	uint8_t i;
 	for(i = 0; i < length; i++){
 		read = SPI_tx_rx(*(data+i));
 	}
+#ifdef FRDM
 	CS_NRF_HIGH();
+#endif
 	return NRF_NO_ERROR;
 }
 
@@ -96,10 +104,13 @@ uint8_t nrf_rf_setup_power(uint8_t pwr_lvl){
 // Reads the status register from the nRF24L01 device.
 // Returns the status data.
 uint8_t nrf_status(){
+#ifdef FRDM
 	CS_NRF_LOW();
-	SPI_tx_byte(NOP);
-	uint8_t data = SPI_rx_byte();
+#endif
+	uint8_t data = SPI_tx_rx(NOP);
+#ifdef FRDM
 	CS_NRF_HIGH();
+#endif
 	return data;
 }
 

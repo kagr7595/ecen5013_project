@@ -10,7 +10,14 @@
 #ifndef _NRF24L01_H
 #define _NRF24L01_H
 
+#ifdef FRDM
 #include "spi.h"
+#elsif BBB
+#include "spi_bbb.h"
+#endif
+
+#include <stdint.h>
+#include <stdio.h>
 
 /* Defines and Structures section
  ***************************************************************************/

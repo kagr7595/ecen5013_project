@@ -20,8 +20,16 @@
 #include "profiler.h"
 #include "command.h"
 #include "LED_control.h"
-//#include "SPI.h"
+
+#ifndef HOST
 #include "nRF24L01.h"
+#endif
+
+#ifdef BBB
+#include "spi_bbb.h"
+#elif FRDM
+#include "spi.h"
+#endif
 
 #ifdef FRDM
 #include "uart.h"
@@ -37,20 +45,16 @@ void project_3_report()
 
 #ifdef MY_DMA
 	dma_init();
-    uint8_t dma_array[256] = "0123456789ABCDEF.01234567890ABCDEF.0123456789ABCDEF.0123456789ABCDEF.\0";
 #endif
     init_uart();
 #ifdef MY_MEM_TEST_N_PROFILER
     uint8_t dma_array[256] = "00000111112222233333444445555566666777778888899999\0";
-	uint8_t * dma_array_ptr1 = dma_array+0;
-	uint8_t * dma_array_ptr2 = dma_array+10;
-	uint8_t second_array[256] = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPp\0";
-	uint8_t trial[256] = "abcdefghijklmnopqrstuvwxyz0123456789\0";
-	LOG_0(dma_array,count2null(dma_array));
+    uint8_t * dma_array_ptr1 = dma_array+0;
+    uint8_t * dma_array_ptr2 = dma_array+10;
+    uint8_t second_array[256] = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPp\0";
+    uint8_t trial[256] = "abcdefghijklmnopqrstuvwxyz0123456789\0";
+    LOG_0(dma_array,count2null(dma_array));
     my_newcharacter('\n',1);
-    //my_memzero(dma_array_ptr2,18);
-    //LOG_0(dma_array,count2null(dma_array));
-    //my_newcharacter('\n',1);
 
     my_memmove(dma_array_ptr1,dma_array_ptr2,20);
 
@@ -79,7 +83,6 @@ void project_3_report()
     my_newcharacter('\n',2);
 
 #endif
-
 #ifdef CMD_RX_TEST
     // tests the receiving of a command
     // Through a terminal program, send hex data corresponding to a received packet.
@@ -129,7 +132,7 @@ void project_3_report()
 #endif
 #endif
 
-#ifndef FRDM
+#ifdef BBB
 #ifdef CMD_TX_TEST_ORIG
     // tests the sending of a command
     // Pretending the terminal program is the FRDM board, this mimics the BBB sending the info
@@ -153,9 +156,11 @@ void project_3_report()
 #endif
 #endif
 
-#ifdef FRDM
+#ifndef HOST
 #ifdef SPI_NRF_TESTS
+#ifdef FRDM
     init_uart();
+#endif
     SPI_init();
 
     // tests read

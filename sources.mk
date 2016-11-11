@@ -29,6 +29,8 @@ SRCS := \
     profiler.c  \
     timer.c    \
     command.c   \
+    spi_bbb.c   \
+    nRF24L01.c   \
     LED_control.c
 
 OBJS := \
@@ -46,6 +48,8 @@ OBJS := \
     profiler.o  \
     timer.o    \
     command.o    \
+    spi_bbb.o   \
+    nRF24L01.o   \
     LED_control.o
 
 HDRS := \
@@ -62,5 +66,7 @@ HDRS := \
     profiler.h  \
     timer.h    \
     command.h    \
+    spi_bbb.h   \
+    nRF24L01.h   \
     LED_control.h
 

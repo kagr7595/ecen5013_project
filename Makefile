@@ -32,10 +32,11 @@ VPATH = $(INCSRC) $(INCHDRS)
 
 ARCH ?= host
 LDFLAGS := -O0 -Wl,-Map=project.map
-CFLAGS := -DPROJECT_3 -DVERBOSE -DTEST_LOGGER -DFTOATEST -DCIRCBUFTESTS -DCM_TX_TEST -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS)
+CFLAGS := -DPROJECT_3 -DVERBOSE -DTEST_LOGGER -DFTOATEST -DCIRCBUFTESTS -DSPI_NRF_TESTS -Wall -g -std=c99 -I$(INCSRC) -I$(INCHDRS)
 
 ifeq ($(ARCH),bbb)
     CC := arm-linux-gnueabihf-gcc
+    override CFLAGS :=  -DBBB $(CFLAGS)
 
 else 
 ifeq ($(ARCH),frdm)
@@ -44,6 +45,7 @@ ifeq ($(ARCH),frdm)
     override LDFLAGS := -lc -lrdimon $(LDFLAGS)
 else
     CC := gcc
+    override CFLAGS :=  -DHOST $(CFLAGS)
 
 endif
 endif
