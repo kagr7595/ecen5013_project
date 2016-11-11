@@ -20,7 +20,7 @@
 #include "profiler.h"
 #include "command.h"
 #include "LED_control.h"
-#include "SPI.h"
+//#include "SPI.h"
 #include "nRF24L01.h"
 
 #ifdef FRDM
@@ -152,6 +152,7 @@ void project_3_report()
     set_brightness(50);
     printf("\nAbout to set color\n");
     set_color(BLUE);
+    printf("DONE");
 #endif
 #endif
 
@@ -278,3 +279,5 @@ void project_3_report()
     while(1);
 }
 #endif
+
+

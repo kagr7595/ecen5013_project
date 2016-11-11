@@ -26,10 +26,10 @@ void set_brightness(uint8_t new_duty){
 	duty = new_duty;
 #else
 	//if invoked by the BBB, it initiates a command packet transfer
-    CI_Msg cmd;
-    uint8_t data[1] = {new_duty};
-    create_cmd(&cmd, SET_BRIGHTNESS, 1, data);
-    send_cmd(&cmd);
+        CI_Msg cmd;
+        uint8_t data[1] = {new_duty};
+        create_cmd(&cmd, SET_BRIGHTNESS, 1, data);
+        send_cmd(&cmd);
 #endif
 }
 
@@ -40,10 +40,10 @@ void set_color(uint8_t new_color){
 	color = new_color;
 #else
 	//if invoked by the BBB, it initiates a command packet transfer
-    CI_Msg cmd;
-    uint8_t data[1] = {new_color};
-    create_cmd(&cmd, SET_COLOR, 1, data);
-    send_cmd(&cmd);
+        CI_Msg cmd;
+        uint8_t data[1] = {new_color};
+        create_cmd(&cmd, SET_COLOR, 1, data);
+        send_cmd(&cmd);
 #endif
 }
 

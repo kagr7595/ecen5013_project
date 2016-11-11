@@ -23,6 +23,7 @@ void send_data(uint8_t *send, uint8_t length){
 		for(i = 0; i < length; i++){
 			printf(" %x",*(send+i));
 		}
+		printf("\nEnd send.\n");
 	#endif
 
 #else
