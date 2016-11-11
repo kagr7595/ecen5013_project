@@ -21,12 +21,11 @@ uint8_t nrf_read_reg(uint8_t addr, uint8_t length, uint8_t *data){
 	else if(addr > 0x1D) {return NRF_INVALID_ADDRESS;}
 	uint8_t cmd = R_REGISTER(addr);
 	CS_NRF_LOW();
-	SPI_tx_byte(cmd);
-	*data = SPI_rx_byte();
+	int32_t fd;
+	*data = SPI_tx_rx(cmd, fd);
 	uint8_t i;
 	for(i = 1; i <= length; i++){
-		SPI_tx_byte(0xFF);
-		*(data+i) = SPI_rx_byte();
+		*(data+i) = SPI_tx_rx(0xFF, fd);
 	}
 	CS_NRF_HIGH();
 	return NRF_NO_ERROR;
@@ -39,12 +38,11 @@ uint8_t nrf_write_reg(uint8_t addr, uint8_t length, uint8_t *data){
 	else if(addr > 0x1D) {return NRF_INVALID_ADDRESS;}
 	uint8_t cmd = W_REGISTER(addr);
 	CS_NRF_LOW();
-	SPI_tx_byte(cmd);
-	uint8_t read = SPI_rx_byte();
+	int32_t fd;
+	uint8_t read = SPI_tx_rx(cmd, fd);
 	uint8_t i;
 	for(i = 0; i < length; i++){
-		SPI_tx_byte(*(data+i));
-		read = SPI_rx_byte();
+		read = SPI_tx_rx(*(data+i), fd);
 	}
 	CS_NRF_HIGH();
 	return NRF_NO_ERROR;

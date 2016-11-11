@@ -12,6 +12,14 @@
 
 #include "spi.h"
 
+// SPI wrapper for SPI_rx_byte and SPI_tx_byte
+// the fd is just to preserve the function call for BBB, but isn't used for FRDM
+uint8_t SPI_tx_rx(uint8_t send, int32_t fd){
+	SPI_tx_byte(send);
+	uint8_t data = SPI_rx_byte();
+	return data;
+}
+
 // SPI Receive byte of data
 uint8_t SPI_rx_byte() {
 	while((SPI0_S & SPI_S_SPRF_MASK) == 0) {;}

@@ -25,6 +25,8 @@
  * Add protoypes for all functions called by this module, with the exception
  * of runtime routines.
  ***************************************************************************/
+// SPI wrapper for SPI_rx_byte and SPI_tx_byt
+uint8_t SPI_tx_rx(uint8_t send, int32_t fd);
 
 // SPI Receive data to be received
 uint8_t SPI_rx_byte();

@@ -37,14 +37,11 @@ void project_3_report()
 
 #ifdef MY_DMA
 	dma_init();
-<<<<<<< HEAD
     uint8_t dma_array[256] = "0123456789ABCDEF.01234567890ABCDEF.0123456789ABCDEF.0123456789ABCDEF.\0";
-=======
 #endif
     init_uart();
 #ifdef MY_MEM_TEST_N_PROFILER
     uint8_t dma_array[256] = "00000111112222233333444445555566666777778888899999\0";
->>>>>>> origin/develop
 	uint8_t * dma_array_ptr1 = dma_array+0;
 	uint8_t * dma_array_ptr2 = dma_array+10;
 	uint8_t second_array[256] = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPp\0";
