@@ -34,7 +34,6 @@
 void project_3_report()
 {
 #ifdef FRDM
-	init_uart();
 
 #ifdef MY_DMA
 	dma_init();

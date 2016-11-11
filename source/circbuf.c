@@ -91,7 +91,7 @@ int8_t print_buffer(volatile CircBuf_t *cb) {
             if ( cb->num_items == 0 ) {;}
             else if ( ((cb->buffer + count) >= (cb->head)) || ((cb->buffer + count) <= (cb->tail)) )
 	    {
-                LOG_1(0,0,(uint64_t)(cb->buffer + count),UI8);
+                LOG_1(0,0,(uint64_t)*(cb->buffer + count),UI8);
 		my_newcharacter(' ',1);  
 	    } else
 		my_newcharacter(' ',2);  
@@ -100,7 +100,7 @@ int8_t print_buffer(volatile CircBuf_t *cb) {
             if ( cb->num_items == 0 ) {;}
             else if ( ((cb->buffer + count) >= (cb->head)) && ((cb->buffer + count) <= (cb->tail)) )
 	    {
-                LOG_1(0,0,(uint64_t)(cb->buffer + count),UI8);
+                LOG_1(0,0,(uint64_t)*(cb->buffer + count),UI8);
 		my_newcharacter(' ',1);  
 	    } else
 		my_newcharacter(' ',2);  
