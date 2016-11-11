@@ -36,13 +36,13 @@ void dma_init();
 void dmamux_en(uint8_t enable);
 
 // DMA writes and reads
-uint8_t dma_transfer(uint8_t * src, uint8_t * dst, uint32_t byte_length);
+uint8_t dma_transfer(uint8_t * src, uint8_t * dst, uint32_t byte_length, uint8_t memmove_f);
 
 // Run DMA in byte mode
-uint8_t dma_byte(uint8_t * src, uint8_t * dst, uint32_t byte_length);
+uint8_t dma_byte(uint8_t * src, uint8_t * dst, uint32_t byte_length, uint8_t memmove_f);
 
 // Run DMA in word mode
-uint8_t dma_word(uint8_t * src, uint8_t * dst, uint32_t word_length);
+uint8_t dma_word(uint8_t * src, uint8_t * dst, uint32_t word_length, uint8_t memmove_f);
 
 // Set byte_length transfer
 void dma_set_bcr_length(uint32_t byte_length);

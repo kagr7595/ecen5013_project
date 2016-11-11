@@ -63,31 +63,55 @@ void dma_init()
     
     //Enable DMAMUX after configuring
     dmamux_en(DMAMUX_ENABLE);
+
 }
 
 
 //DMA writes and reads
-uint8_t dma_transfer(uint8_t * src, uint8_t * dst, uint32_t byte_length)
+uint8_t dma_transfer(uint8_t * src, uint8_t * dst, uint32_t byte_length, uint8_t memmove_f)
 {    
-	uint32_t word_length = byte_length/4;
-	uint32_t leftover_byte_length = byte_length%4;
-    if(word_length > 0)
-    {
-    	//split dma request in terms of words and bytes
-    	dma_word(src, dst, word_length);
-    }
-	if(leftover_byte_length > 0) {
-		uint8_t * new_src = src+word_length*4;
-		uint8_t * new_dst = dst+word_length*4;
-		dma_byte(new_src,new_dst,leftover_byte_length); //leftover bytes (between 1 and 3)
-	}
+	uint32_t align = 4-((uint32_t)src % 4);
+	uint32_t word_length = (byte_length-align%4)/4;
+	uint32_t leftover_byte_length = (byte_length-align%4)%4;
+	uint8_t rem_src = (uint32_t)src%4;
+	uint8_t rem_dst = (uint32_t)dst%4;
 
-    return 0;
+	// if the addresses do not have the same remainder,
+	// they cannot be aligned to a 32 bit boundary at the same time
+	// therefore they will automatically be using the byte mode
+	if(rem_src==rem_dst)
+	{
+		//align to 0/4/8/C address
+		if(align%4 != 0)
+		{
+			dma_byte(src,dst,align,memmove_f);
+			src = src + align;
+			dst = dst + align;
+		}
+		if(word_length > 0)
+		{
+			//split dma request in terms of words and bytes
+			dma_word(src, dst, word_length, memmove_f);
+		}
+		if(leftover_byte_length > 0) {
+			uint8_t * new_src = src+word_length*4;
+			uint8_t * new_dst = dst+word_length*4;
+			if(!memmove_f)
+				new_src = src;
+			dma_byte(new_src,new_dst,leftover_byte_length, memmove_f); //leftover bytes (between 1 and 3)
+		}
+	}
+	else
+	{
+		dma_byte(src,dst,byte_length,memmove_f);
+	}
+	return 0;
 }
 
 //Run DMA in byte mode
-uint8_t dma_byte(uint8_t * src, uint8_t * dst, uint32_t byte_length)
+uint8_t dma_byte(uint8_t * src, uint8_t * dst, uint32_t byte_length, uint8_t memmove_f)
 {
+	while(DMA_DSR_BCR0 & DMA_DSR_BCR_DONE_MASK) {}
 
     //Disable DMAMUX before configuring
     dmamux_en(DMAMUX_DISABLE);
@@ -101,10 +125,14 @@ uint8_t dma_byte(uint8_t * src, uint8_t * dst, uint32_t byte_length)
     
     dma_set_bcr_length(byte_length);
 
+    //Clear SINC field
+    if(memmove_f)
+    	DMA_DCR0 |= /*Bit22    Enable Source Increments by transfer size        */ DMA_DCR_SINC_MASK;
+
     //Clear source/destination size fields
-    //DMA_DCR0 &= ~(DMA_DCR_SSIZE_MASK | DMA_DCR_DSIZE_MASK);
+    DMA_DCR0 &= ~(DMA_DCR_SSIZE_MASK | DMA_DCR_DSIZE_MASK);
     DMA_DCR0 |= (/* Bit21-20 Source Size (00b-32,01b-8,10b-16,11b-ERROR)      */ DMA_DCR_SSIZE(1)
-		 |/*Bit18-17 Destination Size (00b-32,01b-8,10b-16,11b-ERROR) */ DMA_DCR_DSIZE(1)
+		        |/*Bit18-17 Destination Size (00b-32,01b-8,10b-16,11b-ERROR)  */ DMA_DCR_DSIZE(1)
 	);
 
     //Enable DMAMUX after configuring
@@ -118,8 +146,10 @@ uint8_t dma_byte(uint8_t * src, uint8_t * dst, uint32_t byte_length)
 
 
 //Run DMA in word mode
-uint8_t dma_word(uint8_t * src, uint8_t * dst, uint32_t word_length)
+uint8_t dma_word(uint8_t * src, uint8_t * dst, uint32_t word_length, uint8_t memmove_f)
 {        
+	while(DMA_DSR_BCR0 & DMA_DSR_BCR_DONE_MASK) {}
+
     //Disable DMAMUX before configuring
     dmamux_en(DMAMUX_DISABLE);
 
@@ -132,12 +162,17 @@ uint8_t dma_word(uint8_t * src, uint8_t * dst, uint32_t word_length)
 
     dma_set_bcr_length(word_length*4);
 
+
+    //Clear SINC field
+    DMA_DCR0 &= ~DMA_DCR_SINC_MASK;
+    if(memmove_f)
+    	DMA_DCR0 |= /*Bit22    Enable Source Increments by transfer size        */ DMA_DCR_SINC_MASK;
+
     //Clear source/destination size fields
-    //DMA_DCR0 &= ~(DMA_DCR_SSIZE_MASK | DMA_DCR_DSIZE_MASK);
+    DMA_DCR0 &= ~(DMA_DCR_SSIZE_MASK | DMA_DCR_DSIZE_MASK);
     DMA_DCR0 |= (/* Bit21-20 Source Size (00b-32,01b-8,10b-16,11b-ERROR)      */ DMA_DCR_SSIZE(0)
-		 |/*Bit18-17 Destination Size (00b-32,01b-8,10b-16,11b-ERROR) */ DMA_DCR_DSIZE(0)
+		        |/*Bit18-17 Destination Size (00b-32,01b-8,10b-16,11b-ERROR)  */ DMA_DCR_DSIZE(0)
 	);
-    
     
     //Enable DMAMUX after configuring
     dmamux_en(DMAMUX_ENABLE);
@@ -145,6 +180,7 @@ uint8_t dma_word(uint8_t * src, uint8_t * dst, uint32_t word_length)
 
     //Start DMA Transfer
     DMA_DCR0 |= /*Bit16    Start Transfer*/ DMA_DCR_START_MASK;
+
 
     return 0;
 }
@@ -173,8 +209,6 @@ void dma_clear_status(uint8_t in_init)
        |/*Bit28 Bus error on dest   */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_BED_MASK ) == DMA_DSR_BCR_BED_MASK )
        |/*Bit24 Transaction done    */ ((DMA_DSR_BCR0 & DMA_DSR_BCR_DONE_MASK) == DMA_DSR_BCR_DONE_MASK) )
     {
-    	if(/*!in_init*/1)
-    	{
     		if((DMA_DSR_BCR0 & DMA_DSR_BCR_CE_MASK  ) == DMA_DSR_BCR_CE_MASK  )
     			LOG_0(error_CE,count2null(error_CE));
     		if((DMA_DSR_BCR0 & DMA_DSR_BCR_BES_MASK ) == DMA_DSR_BCR_BES_MASK )
@@ -182,15 +216,11 @@ void dma_clear_status(uint8_t in_init)
     		if((DMA_DSR_BCR0 & DMA_DSR_BCR_BED_MASK ) == DMA_DSR_BCR_BED_MASK )
     			LOG_0(error_BED,count2null(error_BED));
 
-            DMA_DSR_BCR0 |= DMA_DSR_BCR_DONE_MASK; //0x1000000u (24th bit) //setting done bit resets the status bits
-    	}
     }
-    	
-    if(!in_init)
-    {
-        // except during init, this should be used in an interrupt service routine to clear the DMA interrupt and error bits
-        DMA_DSR_BCR0 |= DMA_DSR_BCR_DONE_MASK; //0x1000000u (24th bit) //setting done bit resets the status bits
-    }
+
+    // except during init, this should be used in an interrupt service routine to clear the DMA interrupt and error bits
+	DMA_DSR_BCR0 |= DMA_DSR_BCR_DONE_MASK; //0x1000000u (24th bit) //setting done bit resets the status bits
+
 }
 
 
