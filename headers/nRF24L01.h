@@ -12,7 +12,7 @@
 
 #ifdef FRDM
 #include "spi.h"
-#elsif BBB
+#elif BBB
 #include "spi_bbb.h"
 #endif
 
