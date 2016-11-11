@@ -170,7 +170,7 @@ void project_3_report()
     uint8_t msg1[30] = "\n\nWrite Register Test:\n\0";
     LOG_0(msg1,count2null(msg1));
     uint8_t out_data_before[TX_ADDR_LENGTH+1];
-    uint8_t in_data[TX_ADDR_LENGTH] = {0x01,0x02,0x03,0x04,0x05};
+    uint8_t in_data[TX_ADDR_LENGTH] = {0x11,0x22,0x33,0x44,0x55};
     uint8_t out_data_after[TX_ADDR_LENGTH+1];
 
     //read original data
@@ -202,7 +202,7 @@ void project_3_report()
     //CONFIG register write
     uint8_t msg6[30] = "\nConfig Register Write: \0";
     LOG_0(msg6,count2null(msg6));
-    uint8_t config_write = 0x0F;
+    uint8_t config_write = 0x06;
     nrf_config_write(config_write);
     LOG_3(&config_write,1);
 

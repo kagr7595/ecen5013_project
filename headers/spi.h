@@ -26,7 +26,7 @@
  * of runtime routines.
  ***************************************************************************/
 // SPI wrapper for SPI_rx_byte and SPI_tx_byt
-uint8_t SPI_tx_rx(uint8_t send, int32_t fd);
+uint8_t SPI_tx_rx(uint8_t send);
 
 // SPI Receive data to be received
 uint8_t SPI_rx_byte();
